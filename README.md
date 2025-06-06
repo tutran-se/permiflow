@@ -36,20 +36,3 @@ See example/report.md and example/report.csv
 ## License
 
 MIT
-
-## Folder Structure
-
-```plaintext
-permiflow/
-├── main.go
-├── client.go
-├── scanner.go
-├── risk.go
-├── render_markdown.go
-├── render_csv.go
-├── go.mod
-├── README.md
-├── example/
-│   ├── report.md
-│   └── report.csv
-```
