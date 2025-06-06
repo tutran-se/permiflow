@@ -1,0 +1,36 @@
+# Go build artifacts
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Output files
+report.md
+report.csv
+
+# Dependency directories (if vendored)
+vendor/
+
+# IDE/editor-specific
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Kind config backups (optional)
+kind-config-*.yaml
+
+# Coverage files
+coverage.out
