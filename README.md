@@ -14,6 +14,15 @@ Permiflow is a simple read-only CLI tool that scans your Kubernetes RBAC configu
 go run .
 ```
 
+### 🔧 Optional: Disable Emoji
+
+Some users prefer plain terminal output (e.g. for CI logs or `grep`).  
+You can disable all emoji in CLI messages with:
+
+```bash
+PERMIFLOW_NO_EMOJI=true go run main.go
+```
+
 ## Sample Output
 
 See example/report.md and example/report.csv
