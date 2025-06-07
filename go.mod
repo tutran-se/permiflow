@@ -1,4 +1,4 @@
-module github.com/tutra-se/permiflow
+module github.com/tutran-se/permiflow
 
 go 1.21.1
 
