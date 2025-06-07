@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-const Version = "v0.1.2"
+const Version = "v0.1.3"
 
 var (
 	kubeconfig   string
