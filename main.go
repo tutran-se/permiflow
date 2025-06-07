@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-const Version = "v0.1.3"
+const Version = "v0.2.0"
 
 var (
 	kubeconfig   string
@@ -46,22 +46,24 @@ func main() {
 		noEmoji = true
 	}
 
-	emoji := func(s string) string {
-		if noEmoji {
-			return ""
-		}
-		return s
+	// Print banner
+	fmt.Println(emoji("🔍") + " Permiflow: Scanning RBAC...")
+	if namespace != "" {
+		fmt.Printf("%s Limiting scan to namespace: %s\n", emoji("📦"), namespace)
+	} else {
+		fmt.Printf("%s Scanning cluster-wide bindings\n", emoji("📦"))
 	}
 
-	fmt.Println(emoji("🔍") + " Permiflow: Scanning RBAC...")
-
+	// Run scan
 	client := GetKubeClient(kubeconfig)
 	bindings, summary := ScanRBAC(client, namespace)
 
+	// Output directory prep
 	if err := os.MkdirAll(outputDir, 0755); err != nil {
 		log.Fatalf("Error creating output directory: %v", err)
 	}
 
+	// Output handling
 	if dryRun {
 		fmt.Println(emoji("🧪") + " Dry run enabled — no files will be written.")
 	} else {
@@ -77,10 +79,10 @@ func main() {
 		}
 	}
 
+	// Final summary
 	fmt.Printf("%s Summary:\n", emoji("📊"))
 	fmt.Printf("- Found %d cluster-admin binding(s)\n", summary.ClusterAdminBindings)
 	fmt.Printf("- Found %d wildcard verb usage(s)\n", summary.WildcardVerbs)
 	fmt.Printf("- Found %d subject(s) with secrets access\n", summary.SecretsAccess)
-
 	fmt.Printf("%s Report complete. %d bindings scanned.\n", emoji("✅"), len(bindings))
 }

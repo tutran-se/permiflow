@@ -34,3 +34,6 @@ kind-config-*.yaml
 
 # Coverage files
 coverage.out
+
+# Temporary files
+tmp/
