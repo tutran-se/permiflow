@@ -16,9 +16,15 @@ type AccessBinding struct {
 	RiskLevel string
 }
 
-func ScanRBAC(clientset *kubernetes.Clientset) ([]AccessBinding, RiskSummary) {
+type Summary struct {
+	ClusterAdminBindings int
+	WildcardVerbs        int
+	SecretsAccess        int
+}
+
+func ScanRBAC(clientset *kubernetes.Clientset, namespace string) ([]AccessBinding, Summary) {
 	var results []AccessBinding
-	summary := RiskSummary{}
+	var summary Summary
 
 	crbs, _ := clientset.RbacV1().ClusterRoleBindings().List(context.TODO(), metav1.ListOptions{})
 	for _, crb := range crbs.Items {
@@ -26,24 +32,29 @@ func ScanRBAC(clientset *kubernetes.Clientset) ([]AccessBinding, RiskSummary) {
 		for _, subject := range crb.Subjects {
 			role, _ := clientset.RbacV1().ClusterRoles().Get(context.TODO(), roleName, metav1.GetOptions{})
 			for _, rule := range role.Rules {
-				if roleName == "cluster-admin" {
-					summary.ClusterAdminBindings++
-				}
-				if contains(rule.Verbs, "*") {
-					summary.WildcardVerbs++
-				}
-				if contains(rule.Resources, "secrets") {
-					summary.SecretsAccess++
-				}
-
-				results = append(results, AccessBinding{
+				binding := AccessBinding{
 					Subject:   subject.Name,
 					Role:      roleName,
 					Namespace: subject.Namespace,
 					Verbs:     rule.Verbs,
 					Resources: rule.Resources,
 					RiskLevel: ClassifyRisk(rule.Verbs, rule.Resources),
-				})
+				}
+				results = append(results, binding)
+
+				switch binding.RiskLevel {
+				case "HIGH":
+					if contains(binding.Verbs, "*") {
+						summary.WildcardVerbs++
+					}
+					if binding.Role == "cluster-admin" {
+						summary.ClusterAdminBindings++
+					}
+				case "MEDIUM":
+					if contains(binding.Resources, "secrets") {
+						summary.SecretsAccess++
+					}
+				}
 			}
 		}
 	}
