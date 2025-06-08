@@ -1,0 +1,62 @@
+project_name: permiflow
+
+builds:
+  - id: permiflow
+    main: ./cmd
+    binary: permiflow
+    goos: [linux, windows, darwin]
+    goarch: [amd64]
+    ldflags:
+      - "-s -w -X github.com/tutran-se/permiflow/cmd.Version={{.Version}}"
+
+archives:
+  - format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - LICENSE
+      - README.md
+
+checksum:
+  name_template: "checksums.txt"
+
+signs:
+  - artifacts: checksum
+
+release:
+  github:
+    owner: tutran-se
+    name: permiflow
+
+brews:
+  - name: permiflow
+    github:
+      owner: tutran-se
+      name: homebrew-tap
+    commit_author:
+      name: GitHub Actions
+      email: actions@github.com
+    homepage: https://github.com/tutran-se/permiflow
+    description: Permiflow is a Kubernetes RBAC scanning tool
+    test:
+      - permiflow --version
+    install: |
+      bin.install "permiflow"
+
+scoop:
+  name: permiflow
+  bucket:
+    owner: tutran-se
+    name: scoop-bucket
+  description: Permiflow is a Kubernetes RBAC scanning tool
+  homepage: https://github.com/tutran-se/permiflow
+
+nfpms:
+  - id: permiflow
+    builds:
+      - permiflow
+    formats: [deb, rpm]
+    maintainer: Tutran <you@example.com>
+    homepage: https://github.com/tutran-se/permiflow
+    license: MIT
+    bindir: /usr/local/bin
+    description: Permiflow is a Kubernetes RBAC scanning tool

@@ -37,3 +37,6 @@ coverage.out
 
 # Temporary files
 tmp/
+
+# dist
+/dist/
