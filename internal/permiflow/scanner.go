@@ -61,7 +61,7 @@ func ScanRBAC(clientset kubernetes.Interface, namespace string) ([]AccessBinding
 		log.Printf("%s Failed to list ClusterRoleBindings: %v", Emoji("❌"), err)
 		return results, summary
 	}
-	fmt.Printf("%s Found %d ClusterRoleBindings\n", Emoji("🔍"), len(crbs.Items))
+	log.Printf("%s Found %d ClusterRoleBindings\n", Emoji("🔍"), len(crbs.Items))
 
 	for _, crb := range crbs.Items {
 		role, ok := clusterRoleMap[crb.RoleRef.Name]
