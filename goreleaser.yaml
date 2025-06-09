@@ -29,7 +29,7 @@ release:
 
 brews:
   - name: permiflow
-    github:
+    tap:
       owner: tutran-se
       name: homebrew-tap
     commit_author:
@@ -37,8 +37,8 @@ brews:
       email: actions@github.com
     homepage: https://github.com/tutran-se/permiflow
     description: Permiflow is a Kubernetes RBAC scanning tool
-    test:
-      - permiflow --version
+    test: |
+      system "#{bin}/permiflow --version"
     install: |
       bin.install "permiflow"
 
