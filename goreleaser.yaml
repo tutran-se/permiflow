@@ -19,8 +19,7 @@ archives:
 checksum:
   name_template: "checksums.txt"
 
-signs:
-  - artifacts: checksum
+# GPG signing removed for CI compatibility
 
 release:
   github:
