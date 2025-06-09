@@ -3,12 +3,21 @@ name: Test & Lint
 on:
   push:
     branches: [main]
+    paths:
+      - "cmd/**"
+      - "internal/**"
+      - ".github/workflows/test.yml"
+      - "go.mod"
+      - "go.sum"
+
   pull_request:
     branches: [main]
-  paths:
-    - "cmd/**"
-    - "internal/**"
-    - ".github/workflows/test.yml"
+    paths:
+      - "cmd/**"
+      - "internal/**"
+      - ".github/workflows/test.yml"
+      - "go.mod"
+      - "go.sum"
 
 jobs:
   lint-test:
