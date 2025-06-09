@@ -2,7 +2,7 @@ project_name: permiflow
 
 builds:
   - id: permiflow
-    main: ./cmd
+    main: .
     binary: permiflow
     goos: [linux, windows, darwin]
     goarch: [amd64]
