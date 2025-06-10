@@ -1,29 +1,3 @@
-Subject,Namespace,Role,Verbs,Resources,Scope,RiskLevel
-horizontal-pod-autoscaler,kube-system,system:controller:horizontal-pod-autoscaler,get list,*,Cluster,HIGH
-local-path-provisioner-service-account,local-path-storage,local-path-provisioner-role,*,endpoints persistentvolumes pods,Cluster,HIGH
-generic-garbage-collector,kube-system,system:controller:generic-garbage-collector,delete get list patch update watch,*,Cluster,HIGH
-horizontal-pod-autoscaler,kube-system,system:controller:horizontal-pod-autoscaler,get list,*,Cluster,HIGH
-resourcequota-controller,kube-system,system:controller:resourcequota-controller,list watch,*,Cluster,HIGH
-system:masters,,cluster-admin,*,,Cluster,HIGH
-system:masters,,cluster-admin,*,*,Cluster,HIGH
-namespace-controller,kube-system,system:controller:namespace-controller,delete deletecollection get list,*,Cluster,HIGH
-system:kube-controller-manager,,system:kube-controller-manager,list watch,*,Cluster,HIGH
-token-cleaner,kube-system,system:controller:token-cleaner,delete get list watch,secrets,Namespaced,MEDIUM
-system:kube-controller-manager,,system:kube-controller-manager,delete,secrets,Cluster,MEDIUM
-persistent-volume-binder,kube-system,system:controller:persistent-volume-binder,get,secrets,Cluster,MEDIUM
-system:kube-controller-manager,,system:kube-controller-manager,get,configmaps namespaces secrets serviceaccounts,Cluster,MEDIUM
-system:kube-controller-manager,,system:kube-controller-manager,update,secrets serviceaccounts,Cluster,MEDIUM
-bootstrap-signer,kube-system,system:controller:bootstrap-signer,get list watch,secrets,Namespaced,MEDIUM
-system:kube-controller-manager,,system:kube-controller-manager,create,secrets serviceaccounts,Cluster,MEDIUM
-expand-controller,kube-system,system:controller:expand-controller,get,secrets,Cluster,MEDIUM
-disruption-controller,kube-system,system:controller:disruption-controller,get,*/scale,Cluster,LOW
-statefulset-controller,kube-system,system:controller:statefulset-controller,create delete get patch update,pods,Cluster,LOW
-attachdetach-controller,kube-system,system:controller:attachdetach-controller,get list watch,nodes,Cluster,LOW
-attachdetach-controller,kube-system,system:controller:attachdetach-controller,patch update,nodes/status,Cluster,LOW
-attachdetach-controller,kube-system,system:controller:attachdetach-controller,list watch,pods,Cluster,LOW
-attachdetach-controller,kube-system,system:controller:attachdetach-controller,create patch update,events,Cluster,LOW
-attachdetach-controller,kube-system,system:controller:attachdetach-controller,create delete get list watch,volumeattachments,Cluster,LOW
-attachdetach-controller,kube-system,system:controller:attachdetach-controller,get list watch,csidrivers,Cluster,LOW
-attachdetach-controller,kube-system,system:controller:attachdetach-controller,get list watch,csinodes,Cluster,LOW
-certificate-controller,kube-system,system:controller:certificate-controller,delete get list watch,certificatesigningrequests,Cluster,LOW
-certificate-controller,kube-system,system:controller:certificate-controller,update,certificatesigningrequests/approval certificatesigningrequests/status,Cluster,LOW
+Subject,Kind,Namespace,Role,Verbs,Resources,Scope,RiskLevel
+system:nodes,Group,,kubeadm:kubelet-config,get list,configmaps,Namespaced,LOW
+generic-garbage-collector,ServiceAccount,kube-system,system:controller:generic-garbage-collector,delete get list patch update watch,*,Namespaced,HIGH
