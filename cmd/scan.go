@@ -69,6 +69,14 @@ var scanCmd = &cobra.Command{
 			log.Printf("%s Scanning cluster-wide bindings", permiflow.Emoji("📦"))
 		}
 
+		if namespace != "" {
+			log.Printf("%s Scan scope:", permiflow.Emoji("📍"))
+			log.Printf("   - ClusterRoleBindings: filtered to ServiceAccounts in namespace '%s'", namespace)
+			log.Printf("   - RoleBindings: only from namespace '%s'", namespace)
+		} else {
+			log.Printf("%s Scan scope: full cluster (all ClusterRoleBindings + all RoleBindings across namespaces)", permiflow.Emoji("📍"))
+		}
+
 		client := permiflow.GetKubeClient(kubeconfig)
 
 		start := time.Now()
@@ -99,13 +107,12 @@ var scanCmd = &cobra.Command{
 				log.Printf("%s CSV written to: %s", permiflow.Emoji("📊"), csvPath)
 			}
 		}
+		log.Printf("%s Report complete. %d bindings scanned.", permiflow.Emoji("✅"), len(bindings))
 
 		log.Printf("%s Summary:", permiflow.Emoji("📊"))
-		log.Printf("- Found %d cluster-admin binding(s)", summary.ClusterAdminBindings)
-		log.Printf("- Found %d wildcard verb usage(s)", summary.WildcardVerbs)
-		log.Printf("- Found %d subject(s) with secrets access", summary.SecretsAccess)
-
-		log.Printf("%s Report complete. %d bindings scanned.", permiflow.Emoji("✅"), len(bindings))
+		log.Printf("   - Found %d cluster-admin binding(s)", summary.ClusterAdminBindings)
+		log.Printf("   - Found %d wildcard verb usage(s)", summary.WildcardVerbs)
+		log.Printf("   - Found %d subject(s) with secrets access", summary.SecretsAccess)
 
 		return nil
 	},

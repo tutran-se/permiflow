@@ -17,7 +17,7 @@ func WriteCSV(bindings []AccessBinding, filename string) {
 	writer := csv.NewWriter(f)
 	defer writer.Flush()
 
-	if err := writer.Write([]string{"Subject", "Namespace", "Role", "Verbs", "Resources", "Scope", "RiskLevel"}); err != nil {
+	if err := writer.Write([]string{"Subject", "Kind", "Namespace", "Role", "Verbs", "Resources", "Scope", "RiskLevel"}); err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to write CSV header: %v\n", err)
 		return
 	}
@@ -25,6 +25,7 @@ func WriteCSV(bindings []AccessBinding, filename string) {
 	for _, b := range bindings {
 		row := []string{
 			b.Subject,
+			b.SubjectKind,
 			b.Namespace,
 			b.Role,
 			join(b.Verbs, " "),

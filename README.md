@@ -10,18 +10,16 @@
 
 # 🚦 Permiflow
 
-**Permiflow** is a focused, read-only CLI tool that scans Kubernetes RBAC bindings and generates structured, human-readable reports — perfect for security reviews, SOC 2 audits, and internal compliance snapshots.
-
-> > 🚧 MVP: v0.1.x — minimal, offline-compatible, zero-mutation scanning
+**Permiflow** is a zero-mutation CLI tool that scans Kubernetes RBAC bindings and generates structured, human-readable reports — perfect for security reviews, SOC 2 audits, and internal compliance snapshots.
 
 ---
 
 ## 🔧 What It Does
 
-- 📊 Scans `ClusterRoleBindings` (and `RoleBindings` in upcoming `v0.2.0`)
+- 📊 Scans `ClusterRoleBindings` and `RoleBindings`
 - 🔍 Expands roles into rules (verbs + resources)
 - 🧠 Classifies risks: `HIGH`, `MEDIUM`, `LOW`
-- 📄 Exports reports in **Markdown** and **CSV**
+- 📄 Exports reports in **Markdown** (with ToC) and **CSV**
 - ✅ Flags dangerous permissions like:
   - `cluster-admin`
   - Wildcard verbs (`*`)
@@ -75,34 +73,45 @@ Customizable via `--out-dir` and `--prefix`.
 
 ```
 🔍 Permiflow: Scanning RBAC...
-
-📄 Markdown written to: ./audit/report.md
-📊 CSV written to: ./audit/report.csv
-
+📦 Scanning cluster-wide bindings
+📍 Scan scope: full cluster (all ClusterRoleBindings + all RoleBindings across namespaces)
+🔍 Found 51 ClusterRoleBindings
+📦 Scanning RoleBindings in 5 namespaces
+🔍 Found 0 RoleBindings in namespace: default
+🔍 Found 0 RoleBindings in namespace: dev
+🔍 Found 2 RoleBindings in namespace: uat
+🔍 Found 9 RoleBindings in namespace: prod
+🔍 Found 0 RoleBindings in namespace: demo
+⏱ Scan completed in 405.73ms
+📄 Markdown written to: report.md
+📊 CSV written to: report.csv
+✅ Report complete. 240 bindings scanned.
 📊 Summary:
-
-- Found 1 cluster-admin binding(s)
-
-- Found 3 wildcard verb usage(s)
-
-- Found 2 subject(s) with secrets access
-
-✅ Report complete. 14 bindings scanned.
+   - Found 2 cluster-admin binding(s)
+   - Found 3 wildcard verb usage(s)
+   - Found 8 subject(s) with secrets access
 ```
+
+## 🏁 Scan Modes
+
+| Command                          | Behavior                                               |
+| -------------------------------- | ------------------------------------------------------ |
+| `permiflow scan`                 | Scans entire cluster (all namespaces, all roles)       |
+| `permiflow scan --namespace xyz` | Scans only permissions that affect the `xyz` namespace |
 
 ## 🏁 Supported CLI Flags
 
-| Flag           | Type     | Description                                         |
-| -------------- | -------- | --------------------------------------------------- |
-| `--kubeconfig` | `string` | Path to kubeconfig file (default: `~/.kube/config`) |
-| `--namespace`  | `string` | Scan a specific namespace only (optional)           |
-| `--markdown`   | `bool`   | Generate Markdown output (default: true)            |
-| `--csv`        | `bool`   | Generate CSV output (default: true)                 |
-| `--dry-run`    | `bool`   | Run scan without writing output files               |
-| `--plain`      | `bool`   | Disable emojis in output                            |
-| `--out-dir`    | `string` | Output directory for reports                        |
-| `--prefix`     | `string` | Optional prefix for output filenames                |
-| `--version`    | `bool`   | Show version and exit                               |
+| Flag           | Type     | Description                                                                                     |
+| -------------- | -------- | ----------------------------------------------------------------------------------------------- |
+| `--kubeconfig` | `string` | Path to kubeconfig file (default: `~/.kube/config`)                                             |
+| `--namespace`  | `string` | Scan a specific namespace only (optional)                                                       |
+| `--markdown`   | `bool`   | Generate Markdown output (default: true; use --markdown=false to disable)                       |
+| `--csv`        | `bool`   | Generate CSV output (default: true; use --csv=false to disable)                                 |
+| `--dry-run`    | `bool`   | Run scan without writing output files                                                           |
+| `--plain`      | `bool`   | Disable emojis in output                                                                        |
+| `--out-dir`    | `string` | Output directory for reports                                                                    |
+| `--prefix`     | `string` | Base name for output files (without extension). Example: 'audit' → audit.md (default: 'report') |
+| `--version`    | `bool`   | Show version and exit                                                                           |
 
 ### 🧪 Emoji Toggle
 
