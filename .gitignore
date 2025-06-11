@@ -10,8 +10,8 @@ bin/
 *.test
 
 # Output files
-./report.md
-./report.csv
+/report.md
+/report.csv
 
 # Dependency directories (if vendored)
 vendor/
