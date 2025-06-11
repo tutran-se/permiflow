@@ -16,17 +16,21 @@ type AccessBinding struct {
 	Namespace   string
 	Verbs       []string
 	Resources   []string
+	Scope       string // "Cluster" or "Namespaced"
 	RiskLevel   string
-	Scope       string
+	Reason      string // Explanation for risk classification
 }
 
 type Summary struct {
 	ClusterAdminBindings int
 	WildcardVerbs        int
 	SecretsAccess        int
+	PrivilegeEscalation  int
+	ExecAccess           int
+	ConfigReadSecrets    int
 }
 
-func ScanRBAC(clientset kubernetes.Interface, namespace string) ([]AccessBinding, Summary) {
+func ScanRBAC(clientset kubernetes.Interface) ([]AccessBinding, Summary) {
 	ctx := context.Background()
 	var results []AccessBinding
 	var summary Summary
@@ -55,38 +59,21 @@ func ScanRBAC(clientset kubernetes.Interface, namespace string) ([]AccessBinding
 			log.Printf("%s Skipping ClusterRoleBinding %s: ClusterRole %s not found", Emoji("⚠️"), crb.Name, crb.RoleRef.Name)
 			continue
 		}
-		// Filter by subject namespace if a specific --namespace is set
-		if namespace != "" {
-			found := false
-			for _, subject := range crb.Subjects {
-				if subject.Kind == "ServiceAccount" && subject.Namespace == namespace {
-					found = true
-					break
-				}
-			}
-			if !found {
-				continue
-			}
-		}
 
 		extractBindingsFromRole(crb.Subjects, crb.RoleRef.Name, "Cluster", role.Rules, &results, &summary)
 	}
 
 	// Namespace scan: either just one, or all
 	namespaces := []string{}
-	if namespace != "" {
-		namespaces = append(namespaces, namespace)
-	} else {
-		nsList, err := clientset.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
-		if err != nil {
-			log.Printf("%s Failed to list namespaces: %v", Emoji("❌"), err)
-			return results, summary
-		}
-		for _, ns := range nsList.Items {
-			namespaces = append(namespaces, ns.Name)
-		}
-		log.Printf("%s Scanning RoleBindings in %d namespaces", Emoji("📦"), len(namespaces))
+	nsList, err := clientset.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
+	if err != nil {
+		log.Printf("%s Failed to list namespaces: %v", Emoji("❌"), err)
+		return results, summary
 	}
+	for _, ns := range nsList.Items {
+		namespaces = append(namespaces, ns.Name)
+	}
+	log.Printf("%s Scanning RoleBindings in %d namespaces", Emoji("📦"), len(namespaces))
 
 	for _, ns := range namespaces {
 		roleList, err := clientset.RbacV1().Roles(ns).List(ctx, metav1.ListOptions{})
@@ -137,6 +124,7 @@ func ScanRBAC(clientset kubernetes.Interface, namespace string) ([]AccessBinding
 func extractBindingsFromRole(subjects []rbacv1.Subject, roleName, scope string, rules []rbacv1.PolicyRule, out *[]AccessBinding, summary *Summary) {
 	for _, subject := range subjects {
 		for _, rule := range rules {
+			riskLevel, reason := ClassifyRisk(rule.Verbs, rule.Resources)
 			binding := AccessBinding{
 				Subject:     subject.Name,
 				SubjectKind: subject.Kind,
@@ -144,8 +132,9 @@ func extractBindingsFromRole(subjects []rbacv1.Subject, roleName, scope string, 
 				Namespace:   subject.Namespace,
 				Verbs:       rule.Verbs,
 				Resources:   rule.Resources,
-				RiskLevel:   ClassifyRisk(rule.Verbs, rule.Resources),
 				Scope:       scope,
+				RiskLevel:   riskLevel,
+				Reason:      reason,
 			}
 			*out = append(*out, binding)
 			updateSummary(summary, binding)
@@ -154,14 +143,28 @@ func extractBindingsFromRole(subjects []rbacv1.Subject, roleName, scope string, 
 }
 
 func updateSummary(summary *Summary, binding AccessBinding) {
-	if binding.Role == "cluster-admin" {
+	var verbs = binding.Verbs
+	var resources = binding.Resources
+	var role = binding.Role
+
+	if role == "cluster-admin" {
 		summary.ClusterAdminBindings++
 	}
-	if contains(binding.Verbs, "*") {
+	if contains(verbs, "*") {
 		summary.WildcardVerbs++
 	}
-	if contains(binding.Resources, "secrets") {
+	if contains(resources, "secrets") {
 		summary.SecretsAccess++
+	}
+	if (contains(verbs, "create") && contains(resources, "rolebindings")) ||
+		(contains(verbs, "update") && contains(resources, "roles")) {
+		summary.PrivilegeEscalation++
+	}
+	if contains(resources, "pods/exec") || contains(resources, "nodes") {
+		summary.ExecAccess++
+	}
+	if contains(verbs, "get") && contains(resources, "configmaps") {
+		summary.ConfigReadSecrets++
 	}
 }
 
@@ -174,12 +177,44 @@ func contains(list []string, item string) bool {
 	return false
 }
 
-func ClassifyRisk(verbs, resources []string) string {
+func ClassifyRisk(verbs, resources []string) (string, string) {
+	// High Risk Checks
 	if contains(verbs, "*") || contains(resources, "*") {
-		return "HIGH"
+		return "HIGH", "Wildcard verb or resource detected"
 	}
+	if contains(verbs, "create") && contains(resources, "rolebindings") {
+		return "HIGH", "Can create rolebindings (potential privilege escalation)"
+	}
+	if contains(verbs, "update") && contains(resources, "roles") {
+		return "HIGH", "Can update roles (potential privilege escalation)"
+	}
+	if contains(verbs, "update") && contains(resources, "rolebindings") {
+		return "HIGH", "Can update rolebindings (potential privilege escalation)"
+	}
+	if contains(verbs, "create") && contains(resources, "roles") {
+		return "HIGH", "Can create roles (potential privilege escalation)"
+	}
+	if contains(verbs, "create") && contains(resources, "clusterroles") {
+		return "HIGH", "Can create clusterroles (potential privilege escalation)"
+	}
+	if contains(verbs, "update") && contains(resources, "clusterroles") {
+		return "HIGH", "Can update clusterroles (potential privilege escalation)"
+	}
+	if contains(resources, "pods/exec") {
+		return "HIGH", "Access to pods/exec (enables remote command execution)"
+	}
+	if contains(resources, "nodes") {
+		return "HIGH", "Access to nodes (host-level access)"
+	}
+
+	// Medium Risk Checks
 	if contains(resources, "secrets") {
-		return "MEDIUM"
+		return "MEDIUM", "Can access secrets (sensitive credential exposure)"
 	}
-	return "LOW"
+	if contains(verbs, "get") && contains(resources, "configmaps") {
+		return "MEDIUM", "Can read configmaps (often contains credentials or API keys)"
+	}
+
+	// Default to Low Risk
+	return "LOW", "No known high-risk permissions"
 }

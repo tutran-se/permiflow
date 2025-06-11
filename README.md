@@ -99,38 +99,31 @@ Customizable via `--out-dir` and `--prefix`.
 
 ```
 🔍 Permiflow: Scanning RBAC...
-📦 Scanning cluster-wide bindings
-📍 Scan scope: full cluster (all ClusterRoleBindings + all RoleBindings across namespaces)
 🔍 Found 51 ClusterRoleBindings
 📦 Scanning RoleBindings in 5 namespaces
 🔍 Found 0 RoleBindings in namespace: default
 🔍 Found 0 RoleBindings in namespace: dev
 🔍 Found 2 RoleBindings in namespace: uat
-🔍 Found 9 RoleBindings in namespace: prod
-🔍 Found 0 RoleBindings in namespace: demo
-⏱ Scan completed in 405.73ms
-📄 Markdown written to: report.md
-📊 CSV written to: report.csv
+🔍 Found 9 RoleBindings in namespace: stagging
+🔍 Found 0 RoleBindings in namespace: prod
+⏱ Scan completed in 405.62ms
+📄 Markdown written to: examples/report.md
+📊 CSV written to: examples/report.csv
 ✅ Report complete. 240 bindings scanned.
 📊 Summary:
    - Found 2 cluster-admin binding(s)
    - Found 3 wildcard verb usage(s)
    - Found 8 subject(s) with secrets access
+   - Found 0 privilege escalation(s)
+   - Found 16 exec access(es)
+   - Found 16 config read secrets access(es)
 ```
-
-## 🏁 Scan Modes
-
-| Command                          | Behavior                                               |
-| -------------------------------- | ------------------------------------------------------ |
-| `permiflow scan`                 | Scans entire cluster (all namespaces, all roles)       |
-| `permiflow scan --namespace xyz` | Scans only permissions that affect the `xyz` namespace |
 
 ## 🏁 Supported CLI Flags
 
 | Flag           | Type     | Description                                                                                     |
 | -------------- | -------- | ----------------------------------------------------------------------------------------------- |
 | `--kubeconfig` | `string` | Path to kubeconfig file (default: `~/.kube/config`)                                             |
-| `--namespace`  | `string` | Scan a specific namespace only (optional)                                                       |
 | `--markdown`   | `bool`   | Generate Markdown output (default: true; use --markdown=false to disable)                       |
 | `--csv`        | `bool`   | Generate CSV output (default: true; use --csv=false to disable)                                 |
 | `--dry-run`    | `bool`   | Run scan without writing output files                                                           |

@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func WriteMarkdown(bindings []AccessBinding, filename string) {
+func WriteMarkdown(bindings []AccessBinding, filename string, summary Summary) {
 	f, err := os.Create(filename)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to create markdown file: %v\n", err)
@@ -16,6 +16,24 @@ func WriteMarkdown(bindings []AccessBinding, filename string) {
 
 	// Header
 	_, _ = fmt.Fprintln(f, "# Permiflow RBAC Audit Report")
+
+	// Summary
+	_, _ = fmt.Fprintln(f, "## 📊 Summary")
+	_, _ = fmt.Fprintf(f, "- Total bindings scanned: **%d**\n", len(bindings))
+	_, _ = fmt.Fprintf(f, "- Found %d cluster-admin binding(s)\n", summary.ClusterAdminBindings)
+	_, _ = fmt.Fprintf(f, "- Found %d wildcard verb usage(s)\n", summary.WildcardVerbs)
+	_, _ = fmt.Fprintf(f, "- Found %d subject(s) with secrets access\n", summary.SecretsAccess)
+	_, _ = fmt.Fprintf(f, "- Found %d privilege escalation(s)\n", summary.PrivilegeEscalation)
+	_, _ = fmt.Fprintf(f, "- Found %d exec access(es)\n", summary.ExecAccess)
+	_, _ = fmt.Fprintf(f, "- Found %d config read secrets access(es)\n", summary.ConfigReadSecrets)
+	_, _ = fmt.Fprintln(f, "\n---")
+
+	// Risk Levels
+	_, _ = fmt.Fprintln(f, "## 🚦 Risk Levels")
+	_, _ = fmt.Fprintln(f, "- **HIGH**: Wildcard verbs or resources, privilege escalation risks")
+	_, _ = fmt.Fprintln(f, "- **MEDIUM**: Sensitive resources with non-wildcard verbs")
+	_, _ = fmt.Fprintln(f, "- **LOW**: Non-sensitive resources with non-wildcard verbs")
+	_, _ = fmt.Fprintln(f, "\n---")
 
 	// Table of Contents
 	_, _ = fmt.Fprintln(f, "## 📘 Table of Contents")
@@ -34,11 +52,9 @@ func WriteMarkdown(bindings []AccessBinding, filename string) {
 		_, _ = fmt.Fprintf(f, "- Verbs: `%s`\n", formatList(b.Verbs))
 		_, _ = fmt.Fprintf(f, "- Resources: `%s`\n", formatList(b.Resources))
 		_, _ = fmt.Fprintf(f, "- Scope: `%s`\n", b.Scope)
-		_, _ = fmt.Fprintf(f, "- Risk Level: **%s**\n\n", b.RiskLevel)
+		_, _ = fmt.Fprintf(f, "- Risk Level: **%s**\n", b.RiskLevel)
+		_, _ = fmt.Fprintf(f, "- Reason: %s\n\n", b.Reason)
 
-		if b.Namespace == "" && b.SubjectKind != "ServiceAccount" {
-			_, _ = fmt.Fprintf(f, "- ℹ️ Note: This is a cluster-wide subject (%s) granted access to this namespace.\n", b.SubjectKind)
-		}
 		_, _ = fmt.Fprintln(f, "")
 	}
 }

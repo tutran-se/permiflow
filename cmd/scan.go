@@ -14,7 +14,6 @@ import (
 
 var (
 	kubeconfig    string
-	namespace     string
 	markdownOut   bool
 	csvOut        bool
 	dryRun        bool
@@ -41,8 +40,7 @@ var scanCmd = &cobra.Command{
 	# Basic usage
 	permiflow scan
 
-	# Namespaced scan and custom output
-	permiflow scan --namespace dev
+	# Custom output
 	permiflow scan --out-dir ./audit --prefix audit
 
 	# Use specific kubeconfig
@@ -63,24 +61,11 @@ var scanCmd = &cobra.Command{
 		permiflow.NoEmoji = noEmoji
 
 		log.Printf("%s Permiflow: Scanning RBAC...", permiflow.Emoji("🔍"))
-		if namespace != "" {
-			log.Printf("%s Limiting scan to namespace: %s", permiflow.Emoji("📦"), namespace)
-		} else {
-			log.Printf("%s Scanning cluster-wide bindings", permiflow.Emoji("📦"))
-		}
-
-		if namespace != "" {
-			log.Printf("%s Scan scope:", permiflow.Emoji("📍"))
-			log.Printf("   - ClusterRoleBindings: filtered to ServiceAccounts in namespace '%s'", namespace)
-			log.Printf("   - RoleBindings: only from namespace '%s'", namespace)
-		} else {
-			log.Printf("%s Scan scope: full cluster (all ClusterRoleBindings + all RoleBindings across namespaces)", permiflow.Emoji("📍"))
-		}
 
 		client := permiflow.GetKubeClient(kubeconfig)
 
 		start := time.Now()
-		bindings, summary := permiflow.ScanRBAC(client, namespace)
+		bindings, summary := permiflow.ScanRBAC(client)
 
 		// Sort bindings by risk: HIGH > MEDIUM > LOW
 		sort.Slice(bindings, func(i, j int) bool {
@@ -98,7 +83,7 @@ var scanCmd = &cobra.Command{
 		} else {
 			if markdownOut {
 				mdPath := filepath.Join(outputDir, outputPrefix+".md")
-				permiflow.WriteMarkdown(bindings, mdPath)
+				permiflow.WriteMarkdown(bindings, mdPath, summary)
 				log.Printf("%s Markdown written to: %s", permiflow.Emoji("📄"), mdPath)
 			}
 			if csvOut {
@@ -113,6 +98,9 @@ var scanCmd = &cobra.Command{
 		log.Printf("   - Found %d cluster-admin binding(s)", summary.ClusterAdminBindings)
 		log.Printf("   - Found %d wildcard verb usage(s)", summary.WildcardVerbs)
 		log.Printf("   - Found %d subject(s) with secrets access", summary.SecretsAccess)
+		log.Printf("   - Found %d privilege escalation(s)", summary.PrivilegeEscalation)
+		log.Printf("   - Found %d exec access(es)", summary.ExecAccess)
+		log.Printf("   - Found %d config read secrets access(es)", summary.ConfigReadSecrets)
 
 		return nil
 	},
@@ -122,7 +110,6 @@ func init() {
 	rootCmd.AddCommand(scanCmd)
 
 	scanCmd.Flags().StringVar(&kubeconfig, "kubeconfig", filepath.Join(os.Getenv("HOME"), ".kube", "config"), "Path to the kubeconfig file (default: $HOME/.kube/config)")
-	scanCmd.Flags().StringVar(&namespace, "namespace", "", "Limit scan to a specific namespace (optional)")
 	scanCmd.Flags().BoolVar(&markdownOut, "markdown", true, "Enable Markdown report output (default: true; use --markdown=false to disable)")
 	scanCmd.Flags().BoolVar(&csvOut, "csv", true, "Enable CSV report output (default: true; use --csv=false to disable)")
 	scanCmd.Flags().BoolVar(&dryRun, "dry-run", false, "Run scan without writing any files (default: false)")
