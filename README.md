@@ -14,6 +14,32 @@
 
 ---
 
+## ❓ Why Permiflow?
+
+Kubernetes RBAC is powerful — but opaque. Most tools either mutate live clusters, dump cryptic JSON, or require complex setups.
+
+**Permiflow** was built to make **RBAC visibility dead simple**, especially for security-conscious teams. With a single command, you get:
+
+- 📄 A clean, readable Markdown report (ideal for auditors, reviewers, and GRC)
+- 📊 A machine-parsable CSV export for analysis or GitOps flows
+- 🛡️ Peace of mind that your cluster was never touched or mutated
+
+No CRDs. No agents. No surprises.
+
+---
+
+## 👤 Who Is It For?
+
+Permiflow is made for:
+
+- **Platform Engineers** maintaining secure, multi-tenant clusters
+- **Security Engineers** conducting internal reviews or threat modeling
+- **Compliance & GRC Teams** prepping for SOC 2, ISO 27001, or FedRAMP audits
+- **SREs & DevOps Practitioners** who want clear, actionable permission insights
+- Anyone who needs **RBAC clarity** — without modifying the cluster
+
+---
+
 ## 🔧 What It Does
 
 - 📊 Scans `ClusterRoleBindings` and `RoleBindings`
@@ -125,6 +151,8 @@ export PERMIFLOW_NO_EMOJI=true
 
 ## 📣 License & Acknowledgements
 
-MIT License.
+Permiflow is released under the MIT License.
+
+Built with ❤️ for Kubernetes security practitioners.
 
 ---
