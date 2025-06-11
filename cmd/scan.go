@@ -16,6 +16,7 @@ var (
 	kubeconfig    string
 	markdownOut   bool
 	csvOut        bool
+	JSONOut       bool
 	dryRun        bool
 	outputDir     string
 	outputPrefix  string
@@ -91,6 +92,14 @@ var scanCmd = &cobra.Command{
 				permiflow.WriteCSV(bindings, csvPath)
 				log.Printf("%s CSV written to: %s", permiflow.Emoji("📊"), csvPath)
 			}
+
+			if JSONOut {
+				jsonPath := filepath.Join(outputDir, outputPrefix+".json")
+				if err := permiflow.WriteJSON(bindings, summary, outputDir, outputPrefix); err != nil {
+					return fmt.Errorf("failed to write JSON report: %w", err)
+				}
+				log.Printf("%s JSON written to: %s", permiflow.Emoji("📦"), jsonPath)
+			}
 		}
 		log.Printf("%s Report complete. %d bindings scanned.", permiflow.Emoji("✅"), len(bindings))
 
@@ -116,4 +125,5 @@ func init() {
 	scanCmd.Flags().StringVar(&outputDir, "out-dir", ".", "Directory to write reports into (default: current directory)")
 	scanCmd.Flags().StringVar(&outputPrefix, "prefix", "report", "Base name for output files (without extension). Example: 'audit' → audit.md (default: 'report')")
 	scanCmd.Flags().BoolVar(&logTimestamps, "log-timestamps", false, "Include timestamps in output (useful for debugging/logging)")
+	scanCmd.Flags().BoolVar(&JSONOut, "json", true, "Enable JSON report output (default: true; use --json=false to disable)")
 }

@@ -1,0 +1,3977 @@
+{
+  "summary": {
+    "ClusterAdminBindings": 2,
+    "WildcardVerbs": 3,
+    "SecretsAccess": 8,
+    "PrivilegeEscalation": 0,
+    "ExecAccess": 16,
+    "ConfigReadSecrets": 16
+  },
+  "bindings": [
+    {
+      "Subject": "clusterrole-aggregation-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:clusterrole-aggregation-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "escalate",
+        "get",
+        "list",
+        "patch",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "clusterroles"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Can update clusterroles (potential privilege escalation)"
+    },
+    {
+      "Subject": "system:masters",
+      "SubjectKind": "Group",
+      "Role": "cluster-admin",
+      "Namespace": "",
+      "Verbs": [
+        "*"
+      ],
+      "Resources": null,
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Wildcard verb or resource detected"
+    },
+    {
+      "Subject": "system:kube-proxy",
+      "SubjectKind": "User",
+      "Role": "system:node-proxier",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "nodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "kindnet",
+      "SubjectKind": "ServiceAccount",
+      "Role": "kindnet",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "nodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "system:bootstrappers:kubeadm:default-node-token",
+      "SubjectKind": "Group",
+      "Role": "kubeadm:get-nodes",
+      "Namespace": "",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": [
+        "nodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "nodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "system:kube-controller-manager",
+      "Namespace": "",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "*"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Wildcard verb or resource detected"
+    },
+    {
+      "Subject": "system:masters",
+      "SubjectKind": "Group",
+      "Role": "cluster-admin",
+      "Namespace": "",
+      "Verbs": [
+        "*"
+      ],
+      "Resources": [
+        "*"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Wildcard verb or resource detected"
+    },
+    {
+      "Subject": "coredns",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:coredns",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": [
+        "nodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "kube-proxy",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:node-proxier",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "nodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "ttl-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:ttl-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list",
+        "patch",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "nodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "service-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:service-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "nodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "local-path-provisioner-service-account",
+      "SubjectKind": "ServiceAccount",
+      "Role": "local-path-provisioner-role",
+      "Namespace": "local-path-storage",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "nodes",
+        "persistentvolumeclaims",
+        "configmaps"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "local-path-provisioner-service-account",
+      "SubjectKind": "ServiceAccount",
+      "Role": "local-path-provisioner-role",
+      "Namespace": "local-path-storage",
+      "Verbs": [
+        "*"
+      ],
+      "Resources": [
+        "endpoints",
+        "persistentvolumes",
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Wildcard verb or resource detected"
+    },
+    {
+      "Subject": "route-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:route-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "nodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "resourcequota-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:resourcequota-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "*"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Wildcard verb or resource detected"
+    },
+    {
+      "Subject": "pod-garbage-collector",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:pod-garbage-collector",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list"
+      ],
+      "Resources": [
+        "nodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "persistent-volume-binder",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:persistent-volume-binder",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list"
+      ],
+      "Resources": [
+        "nodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "node-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:node-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "delete",
+        "get",
+        "list",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "nodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "attachdetach-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:attachdetach-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "nodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "namespace-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:namespace-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "delete",
+        "deletecollection",
+        "get",
+        "list"
+      ],
+      "Resources": [
+        "*"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Wildcard verb or resource detected"
+    },
+    {
+      "Subject": "horizontal-pod-autoscaler",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:horizontal-pod-autoscaler",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list"
+      ],
+      "Resources": [
+        "*"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Wildcard verb or resource detected"
+    },
+    {
+      "Subject": "horizontal-pod-autoscaler",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:horizontal-pod-autoscaler",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list"
+      ],
+      "Resources": [
+        "*"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Wildcard verb or resource detected"
+    },
+    {
+      "Subject": "generic-garbage-collector",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:generic-garbage-collector",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "delete",
+        "get",
+        "list",
+        "patch",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "*"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Wildcard verb or resource detected"
+    },
+    {
+      "Subject": "endpointslice-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:endpointslice-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "nodes",
+        "pods",
+        "services"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "daemon-set-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:daemon-set-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "nodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "HIGH",
+      "Reason": "Access to nodes (host-level access)"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "system:kube-controller-manager",
+      "Namespace": "",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "secrets",
+        "serviceaccounts"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can access secrets (sensitive credential exposure)"
+    },
+    {
+      "Subject": "expand-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:expand-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": [
+        "secrets"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can access secrets (sensitive credential exposure)"
+    },
+    {
+      "Subject": "token-cleaner",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:token-cleaner",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "delete",
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "secrets"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can access secrets (sensitive credential exposure)"
+    },
+    {
+      "Subject": "cloud-provider",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:cloud-provider",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can read configmaps (often contains credentials or API keys)"
+    },
+    {
+      "Subject": "bootstrap-signer",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:bootstrap-signer",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "secrets"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can access secrets (sensitive credential exposure)"
+    },
+    {
+      "Subject": "kube-scheduler",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system::leader-locking-kube-scheduler",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "update"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can read configmaps (often contains credentials or API keys)"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system::leader-locking-kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "update"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can read configmaps (often contains credentials or API keys)"
+    },
+    {
+      "Subject": "kube-controller-manager",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system::leader-locking-kube-controller-manager",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "update"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can read configmaps (often contains credentials or API keys)"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "system::leader-locking-kube-controller-manager",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "update"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can read configmaps (often contains credentials or API keys)"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "extension-apiserver-authentication-reader",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can read configmaps (often contains credentials or API keys)"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "extension-apiserver-authentication-reader",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can read configmaps (often contains credentials or API keys)"
+    },
+    {
+      "Subject": "system:nodes",
+      "SubjectKind": "Group",
+      "Role": "kubeadm:nodes-kubeadm-config",
+      "Namespace": "",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can read configmaps (often contains credentials or API keys)"
+    },
+    {
+      "Subject": "system:bootstrappers:kubeadm:default-node-token",
+      "SubjectKind": "Group",
+      "Role": "kubeadm:nodes-kubeadm-config",
+      "Namespace": "",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can read configmaps (often contains credentials or API keys)"
+    },
+    {
+      "Subject": "system:bootstrappers:kubeadm:default-node-token",
+      "SubjectKind": "Group",
+      "Role": "kubeadm:kubelet-config",
+      "Namespace": "",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can read configmaps (often contains credentials or API keys)"
+    },
+    {
+      "Subject": "system:nodes",
+      "SubjectKind": "Group",
+      "Role": "kubeadm:kubelet-config",
+      "Namespace": "",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can read configmaps (often contains credentials or API keys)"
+    },
+    {
+      "Subject": "system:bootstrappers:kubeadm:default-node-token",
+      "SubjectKind": "Group",
+      "Role": "kube-proxy",
+      "Namespace": "",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can read configmaps (often contains credentials or API keys)"
+    },
+    {
+      "Subject": "bootstrap-signer",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:bootstrap-signer",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can read configmaps (often contains credentials or API keys)"
+    },
+    {
+      "Subject": "system:anonymous",
+      "SubjectKind": "User",
+      "Role": "kubeadm:bootstrap-signer-clusterinfo",
+      "Namespace": "",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can read configmaps (often contains credentials or API keys)"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "system:kube-controller-manager",
+      "Namespace": "",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": [
+        "configmaps",
+        "namespaces",
+        "secrets",
+        "serviceaccounts"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can access secrets (sensitive credential exposure)"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "system:kube-controller-manager",
+      "Namespace": "",
+      "Verbs": [
+        "delete"
+      ],
+      "Resources": [
+        "secrets"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can access secrets (sensitive credential exposure)"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "system:kube-controller-manager",
+      "Namespace": "",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "secrets",
+        "serviceaccounts"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can access secrets (sensitive credential exposure)"
+    },
+    {
+      "Subject": "persistent-volume-binder",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:persistent-volume-binder",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": [
+        "secrets"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "MEDIUM",
+      "Reason": "Can access secrets (sensitive credential exposure)"
+    },
+    {
+      "Subject": "statefulset-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:statefulset-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "statefulsets/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "route-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:route-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "patch"
+      ],
+      "Resources": [
+        "nodes/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "deployment-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:deployment-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "get",
+        "list",
+        "patch",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "replicasets"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "deployment-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:deployment-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "deployment-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:deployment-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "replicaset-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:replicaset-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "list",
+        "patch",
+        "watch"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "disruption-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:disruption-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "replicasets"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "disruption-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:disruption-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "replicationcontrollers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "disruption-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:disruption-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "poddisruptionbudgets"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "disruption-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:disruption-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "statefulsets"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "disruption-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:disruption-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "poddisruptionbudgets/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "disruption-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:disruption-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": [
+        "*/scale"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "disruption-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:disruption-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "disruption-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:disruption-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "patch"
+      ],
+      "Resources": [
+        "pods/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "endpoint-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:endpoint-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "pods",
+        "services"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "endpoint-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:endpoint-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "get",
+        "list",
+        "update"
+      ],
+      "Resources": [
+        "endpoints"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "endpoint-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:endpoint-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "endpoints/restricted"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "endpoint-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:endpoint-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "attachdetach-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:attachdetach-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "csidrivers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "endpointslice-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:endpointslice-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "services/finalizers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "endpointslice-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:endpointslice-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "get",
+        "list",
+        "update"
+      ],
+      "Resources": [
+        "endpointslices"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "endpointslice-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:endpointslice-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "endpointslicemirroring-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:endpointslicemirroring-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "endpoints",
+        "services"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "endpointslicemirroring-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:endpointslicemirroring-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "services/finalizers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "endpointslicemirroring-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:endpointslicemirroring-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "endpoints/finalizers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "endpointslicemirroring-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:endpointslicemirroring-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "get",
+        "list",
+        "update"
+      ],
+      "Resources": [
+        "endpointslices"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "endpointslicemirroring-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:endpointslicemirroring-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "ephemeral-volume-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:ephemeral-volume-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "ephemeral-volume-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:ephemeral-volume-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "pods/finalizers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "ephemeral-volume-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:ephemeral-volume-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "persistentvolumeclaims"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "ephemeral-volume-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:ephemeral-volume-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "expand-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:expand-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "patch",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "persistentvolumes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "expand-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:expand-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "persistentvolumeclaims/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "expand-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:expand-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "persistentvolumeclaims"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "expand-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:expand-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "storageclasses"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "expand-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:expand-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": [
+        "endpoints",
+        "services"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "deployment-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:deployment-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "deployments/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "expand-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:expand-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "attachdetach-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:attachdetach-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "volumeattachments"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "generic-garbage-collector",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:generic-garbage-collector",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "horizontal-pod-autoscaler",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:horizontal-pod-autoscaler",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "horizontalpodautoscalers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "horizontal-pod-autoscaler",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:horizontal-pod-autoscaler",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "horizontalpodautoscalers/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "horizontal-pod-autoscaler",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:horizontal-pod-autoscaler",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "update"
+      ],
+      "Resources": [
+        "*/scale"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "horizontal-pod-autoscaler",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:horizontal-pod-autoscaler",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "horizontal-pod-autoscaler",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:horizontal-pod-autoscaler",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "attachdetach-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:attachdetach-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "attachdetach-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:attachdetach-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "horizontal-pod-autoscaler",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:horizontal-pod-autoscaler",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "job-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:job-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "patch",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "jobs"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "job-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:job-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "jobs/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "job-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:job-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "jobs/finalizers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "job-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:job-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "list",
+        "patch",
+        "watch"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "job-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:job-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "resourcequota-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:resourcequota-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "resourcequotas/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "namespace-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:namespace-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "namespaces/finalize",
+        "namespaces/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "attachdetach-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:attachdetach-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "nodes/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "attachdetach-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:attachdetach-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "persistentvolumeclaims",
+        "persistentvolumes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "node-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:node-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "nodes/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "node-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:node-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "pods/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "node-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:node-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "delete",
+        "list"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "node-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:node-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "get",
+        "list",
+        "update"
+      ],
+      "Resources": [
+        "clustercidrs"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "node-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:node-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "node-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:node-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "persistent-volume-binder",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:persistent-volume-binder",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "get",
+        "list",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "persistentvolumes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "persistent-volume-binder",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:persistent-volume-binder",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "persistentvolumes/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "persistent-volume-binder",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:persistent-volume-binder",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "persistentvolumeclaims"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "persistent-volume-binder",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:persistent-volume-binder",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "persistentvolumeclaims/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "persistent-volume-binder",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:persistent-volume-binder",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "persistent-volume-binder",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:persistent-volume-binder",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "storageclasses"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "persistent-volume-binder",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:persistent-volume-binder",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "get",
+        "update"
+      ],
+      "Resources": [
+        "endpoints"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "persistent-volume-binder",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:persistent-volume-binder",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "get"
+      ],
+      "Resources": [
+        "services"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "deployment-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:deployment-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "deployments"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:authenticated",
+      "SubjectKind": "Group",
+      "Role": "system:basic-user",
+      "Namespace": "",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "selfsubjectreviews"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "persistent-volume-binder",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:persistent-volume-binder",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "watch"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "persistent-volume-binder",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:persistent-volume-binder",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "pod-garbage-collector",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:pod-garbage-collector",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "delete",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:authenticated",
+      "SubjectKind": "Group",
+      "Role": "system:basic-user",
+      "Namespace": "",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "selfsubjectaccessreviews",
+        "selfsubjectrulesreviews"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "pod-garbage-collector",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:pod-garbage-collector",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "patch"
+      ],
+      "Resources": [
+        "pods/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "pv-protection-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:pv-protection-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "persistentvolumes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "pv-protection-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:pv-protection-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "pvc-protection-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:pvc-protection-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "persistentvolumeclaims"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "pvc-protection-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:pvc-protection-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "pvc-protection-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:pvc-protection-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "replicaset-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:replicaset-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "replicasets"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "certificate-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:certificate-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "subjectaccessreviews"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "certificate-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:certificate-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "certificatesigningrequests/approval",
+        "certificatesigningrequests/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "disruption-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:disruption-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "deployments"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "replicaset-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:replicaset-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "replication-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:replication-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "replicationcontrollers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "replication-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:replication-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "replicationcontrollers/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "replication-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:replication-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "replicationcontrollers/finalizers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "replication-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:replication-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "list",
+        "patch",
+        "watch"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "replication-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:replication-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "local-path-provisioner-service-account",
+      "SubjectKind": "ServiceAccount",
+      "Role": "local-path-provisioner-role",
+      "Namespace": "local-path-storage",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "storageclasses"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "namespace-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:namespace-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "delete",
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "namespaces"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "deployment-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:deployment-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "deployments/finalizers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "kube-scheduler",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system::leader-locking-kube-scheduler",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "watch"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "root-ca-cert-publisher",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:root-ca-cert-publisher",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "local-path-provisioner-service-account",
+      "SubjectKind": "ServiceAccount",
+      "Role": "local-path-provisioner-role",
+      "Namespace": "local-path-storage",
+      "Verbs": [
+        "create",
+        "patch"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "resourcequota-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:resourcequota-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "route-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:route-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "service-account-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:service-account-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "serviceaccounts"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "service-account-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:service-account-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "service-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:service-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "services"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "service-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:service-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "services/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "kube-proxy",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:node-proxier",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "endpointslices"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "service-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:service-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "statefulset-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:statefulset-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "statefulset-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:statefulset-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "statefulsets"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "replicaset-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:replicaset-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "replicasets/finalizers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "statefulset-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:statefulset-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "statefulsets/finalizers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "statefulset-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:statefulset-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "get",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "statefulset-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:statefulset-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "get",
+        "list",
+        "patch",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "controllerrevisions"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "statefulset-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:statefulset-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "get"
+      ],
+      "Resources": [
+        "persistentvolumeclaims"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "statefulset-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:statefulset-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "statefulset-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:statefulset-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "delete",
+        "update"
+      ],
+      "Resources": [
+        "persistentvolumeclaims"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "ttl-after-finished-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:ttl-after-finished-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "delete",
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "jobs"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "ttl-after-finished-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:ttl-after-finished-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "kube-proxy",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:node-proxier",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "ttl-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:ttl-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "coredns",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:coredns",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "endpoints",
+        "services",
+        "pods",
+        "namespaces"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "kube-proxy",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:node-proxier",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "endpoints",
+        "services"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "coredns",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:coredns",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "endpointslices"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:authenticated",
+      "SubjectKind": "Group",
+      "Role": "system:discovery",
+      "Namespace": "",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": null,
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "system:kube-controller-manager",
+      "Namespace": "",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "system:kube-controller-manager",
+      "Namespace": "",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "leases"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "system:kube-controller-manager",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "update"
+      ],
+      "Resources": [
+        "leases"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "system:kube-controller-manager",
+      "Namespace": "",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "endpoints"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "system:kube-controller-manager",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "update"
+      ],
+      "Resources": [
+        "endpoints"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "daemon-set-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:daemon-set-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "daemon-set-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:daemon-set-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "get",
+        "list",
+        "patch",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "controllerrevisions"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "daemon-set-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:daemon-set-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "pods/binding"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:nodes",
+      "SubjectKind": "Group",
+      "Role": "system:certificates.k8s.io:certificatesigningrequests:selfnodeclient",
+      "Namespace": "",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "certificatesigningrequests/selfnodeclient"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "system:kube-controller-manager",
+      "Namespace": "",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "tokenreviews"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "system:kube-controller-manager",
+      "Namespace": "",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "subjectaccessreviews"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:bootstrappers:kubeadm:default-node-token",
+      "SubjectKind": "Group",
+      "Role": "system:certificates.k8s.io:certificatesigningrequests:nodeclient",
+      "Namespace": "",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "certificatesigningrequests/nodeclient"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "system:kube-controller-manager",
+      "Namespace": "",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "serviceaccounts/token"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "kube-dns",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:kube-dns",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "endpoints",
+        "services"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "leases"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "update"
+      ],
+      "Resources": [
+        "leases"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "endpoints"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "update"
+      ],
+      "Resources": [
+        "endpoints"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:bootstrappers:kubeadm:default-node-token",
+      "SubjectKind": "Group",
+      "Role": "system:node-bootstrapper",
+      "Namespace": "",
+      "Verbs": [
+        "create",
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "certificatesigningrequests"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "delete",
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "bindings",
+        "pods/binding"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "pods/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "replicationcontrollers",
+        "services"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "replicasets"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "statefulsets"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "poddisruptionbudgets"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "persistentvolumeclaims",
+        "persistentvolumes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "tokenreviews"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "create"
+      ],
+      "Resources": [
+        "subjectaccessreviews"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "csinodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "namespaces"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "csidrivers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "csistoragecapacities"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:monitoring",
+      "SubjectKind": "Group",
+      "Role": "system:monitoring",
+      "Namespace": "",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": null,
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-proxy",
+      "SubjectKind": "User",
+      "Role": "system:node-proxier",
+      "Namespace": "",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "endpoints",
+        "services"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "kindnet",
+      "SubjectKind": "ServiceAccount",
+      "Role": "kindnet",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "use"
+      ],
+      "Resources": [
+        "podsecuritypolicies"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-proxy",
+      "SubjectKind": "User",
+      "Role": "system:node-proxier",
+      "Namespace": "",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-proxy",
+      "SubjectKind": "User",
+      "Role": "system:node-proxier",
+      "Namespace": "",
+      "Verbs": [
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "endpointslices"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:authenticated",
+      "SubjectKind": "Group",
+      "Role": "system:public-info-viewer",
+      "Namespace": "",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": null,
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:unauthenticated",
+      "SubjectKind": "Group",
+      "Role": "system:public-info-viewer",
+      "Namespace": "",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": null,
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:serviceaccounts",
+      "SubjectKind": "Group",
+      "Role": "system:service-account-issuer-discovery",
+      "Namespace": "",
+      "Verbs": [
+        "get"
+      ],
+      "Resources": null,
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:volume-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "patch",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "persistentvolumes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:volume-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "storageclasses"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system:volume-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "get",
+        "list",
+        "patch",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "persistentvolumeclaims"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "daemon-set-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:daemon-set-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "list",
+        "patch",
+        "watch"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "attachdetach-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:attachdetach-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "csinodes"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "bootstrap-signer",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:bootstrap-signer",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "bootstrap-signer",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:bootstrap-signer",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "daemon-set-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:daemon-set-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "daemonsets/finalizers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "daemon-set-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:daemon-set-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "daemonsets/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "daemon-set-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:daemon-set-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "daemonsets"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "cronjob-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:cronjob-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "cronjob-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:cronjob-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "delete",
+        "list"
+      ],
+      "Resources": [
+        "pods"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "cronjob-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:cronjob-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "cronjobs/finalizers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "cronjob-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:cronjob-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "cronjobs/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-controller-manager",
+      "SubjectKind": "User",
+      "Role": "system::leader-locking-kube-controller-manager",
+      "Namespace": "",
+      "Verbs": [
+        "watch"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "cronjob-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:cronjob-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "delete",
+        "get",
+        "list",
+        "patch",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "jobs"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "kube-controller-manager",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system::leader-locking-kube-controller-manager",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "watch"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "cronjob-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:cronjob-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "get",
+        "list",
+        "update",
+        "watch"
+      ],
+      "Resources": [
+        "cronjobs"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "system:kube-scheduler",
+      "SubjectKind": "User",
+      "Role": "system::leader-locking-kube-scheduler",
+      "Namespace": "",
+      "Verbs": [
+        "watch"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "certificate-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:certificate-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "delete",
+        "get",
+        "list",
+        "watch"
+      ],
+      "Resources": [
+        "certificatesigningrequests"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "root-ca-cert-publisher",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:root-ca-cert-publisher",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "update"
+      ],
+      "Resources": [
+        "configmaps"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "certificate-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:certificate-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "replicaset-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:replicaset-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "update"
+      ],
+      "Resources": [
+        "replicasets/status"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "certificate-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:certificate-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "sign"
+      ],
+      "Resources": [
+        "signers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "certificate-controller",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:certificate-controller",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "approve"
+      ],
+      "Resources": [
+        "signers"
+      ],
+      "Scope": "Cluster",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    },
+    {
+      "Subject": "token-cleaner",
+      "SubjectKind": "ServiceAccount",
+      "Role": "system:controller:token-cleaner",
+      "Namespace": "kube-system",
+      "Verbs": [
+        "create",
+        "patch",
+        "update"
+      ],
+      "Resources": [
+        "events"
+      ],
+      "Scope": "Namespaced",
+      "RiskLevel": "LOW",
+      "Reason": "No known high-risk permissions"
+    }
+  ]
+}

@@ -21,7 +21,7 @@ Kubernetes RBAC is powerful — but opaque. Most tools either mutate live cluste
 **Permiflow** was built to make **RBAC visibility dead simple**, especially for security-conscious teams. With a single command, you get:
 
 - 📄 A clean, readable Markdown report (ideal for auditors, reviewers, and GRC)
-- 📊 A machine-parsable CSV export for analysis or GitOps flows
+- 📊 A machine-parsable CSV/JSON export for analysis or GitOps flows
 - 🛡️ Peace of mind that your cluster was never touched or mutated
 
 No CRDs. No agents. No surprises.
@@ -50,6 +50,7 @@ Permiflow is made for:
   - `cluster-admin`
   - Wildcard verbs (`*`)
   - Access to sensitive resources (e.g. `secrets`)
+  - Privilege escalation risks
 
 ---
 
@@ -67,11 +68,20 @@ Permiflow is made for:
 ```bash
 go install github.com/tutran-se/permiflow@latest
 
-permiflow \
+# Short version
+permiflow scan
+
+# Dry run (no output files)
+permiflow scan --dry-run
+
+# Full version
+permiflow scan \
   --kubeconfig ~/.kube/config \
   --markdown \
   --csv \
+  --json \
   --out-dir ./audit \
+  --prefix report \
   --plain
 ```
 
@@ -81,6 +91,7 @@ After running, you'll see:
 
 - `./audit/report.md`
 - `./audit/report.csv`
+- `./audit/report.json`
 
 ---
 
@@ -88,10 +99,11 @@ After running, you'll see:
 
 Permiflow generates two files by default:
 
-| File         | Purpose                                   |
-| ------------ | ----------------------------------------- |
-| `report.md`  | Human-friendly access summary             |
-| `report.csv` | Structured table of roles and permissions |
+| File          | Purpose                                   |
+| ------------- | ----------------------------------------- |
+| `report.md`   | Human-friendly access summary             |
+| `report.csv`  | Structured table of roles and permissions |
+| `report.json` | Machine-readable JSON format              |
 
 Customizable via `--out-dir` and `--prefix`.
 
@@ -106,9 +118,10 @@ Customizable via `--out-dir` and `--prefix`.
 🔍 Found 2 RoleBindings in namespace: uat
 🔍 Found 9 RoleBindings in namespace: stagging
 🔍 Found 0 RoleBindings in namespace: prod
-⏱ Scan completed in 405.62ms
+⏱ Scan completed in 410.46ms
 📄 Markdown written to: examples/report.md
 📊 CSV written to: examples/report.csv
+📦 JSON written to: examples/report.json
 ✅ Report complete. 240 bindings scanned.
 📊 Summary:
    - Found 2 cluster-admin binding(s)
@@ -126,11 +139,11 @@ Customizable via `--out-dir` and `--prefix`.
 | `--kubeconfig` | `string` | Path to kubeconfig file (default: `~/.kube/config`)                                             |
 | `--markdown`   | `bool`   | Generate Markdown output (default: true; use --markdown=false to disable)                       |
 | `--csv`        | `bool`   | Generate CSV output (default: true; use --csv=false to disable)                                 |
+| `--json`       | `bool`   | Generate JSON output (default: true; use --json=false to disable)                               |
 | `--dry-run`    | `bool`   | Run scan without writing output files                                                           |
 | `--plain`      | `bool`   | Disable emojis in output                                                                        |
 | `--out-dir`    | `string` | Output directory for reports                                                                    |
 | `--prefix`     | `string` | Base name for output files (without extension). Example: 'audit' → audit.md (default: 'report') |
-| `--version`    | `bool`   | Show version and exit                                                                           |
 
 ### 🧪 Emoji Toggle
 

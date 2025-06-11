@@ -12,6 +12,7 @@ bin/
 # Output files
 /report.md
 /report.csv
+/report.json
 
 # Dependency directories (if vendored)
 vendor/
