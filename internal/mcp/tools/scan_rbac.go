@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/mark3labs/mcp-go/mcp"
+	mcp "github.com/mark3labs/mcp-go/mcp"
 )
 
 // ScanRBACRequest defines the request format for the scan_rbac tool
@@ -36,27 +36,14 @@ type Rule struct {
 	APIGroups []string `json:"api_groups,omitempty"`
 }
 
-// ScanRBACTool implements the RBAC scanning tool
-var ScanRBACTool = mcp.NewTool("scan_rbac",
-	mcp.WithDescription("Scan Kubernetes RBAC rules and generate a report"),
-	mcp.WithString("output_format",
-		mcp.Default("json"),
-		mcp.Enum("json", "markdown", "csv"),
-		mcp.Description("Output format for the report"),
-	),
-	mcp.WithArray("namespaces",
-		mcp.Description("List of namespaces to scan (empty for all)"),
-		mcp.Items("string"),
-	),
-)
-
-func scanRBAC(ctx context.Context, data json.RawMessage) (interface{}, error) {
+// scanRBAC handles the RBAC scanning logic
+func scanRBAC(ctx context.Context, input json.RawMessage) (*ScanRBACResponse, error) {
 	var req ScanRBACRequest
-	if err := json.Unmarshal(data, &req); err != nil {
+	if err := json.Unmarshal(input, &req); err != nil {
 		return nil, fmt.Errorf("invalid request: %w", err)
 	}
 
-	// TODO: Implement actual RBAC scanning using the existing Permiflow logic
+	// TODO: Replace with actual RBAC scanning logic from Permiflow
 	// For now, return a mock response
 	return &ScanRBACResponse{
 		Report: fmt.Sprintf("rbac-report.%s", req.OutputFormat),
@@ -77,3 +64,48 @@ func scanRBAC(ctx context.Context, data json.RawMessage) (interface{}, error) {
 		},
 	}, nil
 }
+
+// ScanRBACTool is the MCP tool for scanning Kubernetes RBAC rules
+var ScanRBACTool = mcp.NewTool("scan_rbac",
+	mcp.WithDescription("Scan Kubernetes RBAC rules and generate a report"),
+	mcp.WithString("output_format",
+		mcp.Description("Output format for the report"),
+		mcp.DefaultString("json"),
+		mcp.Enum("json", "markdown", "csv"),
+	),
+	mcp.WithArray("namespaces",
+		mcp.Description("List of namespaces to scan (empty for all)"),
+		mcp.Items("string"),
+	),
+)
+
+// Handler handles the scan_rbac tool requests
+func Handler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	// Get the raw arguments as JSON
+	rawArgs := req.GetRawArguments()
+	argsJSON, err := json.Marshal(rawArgs)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal request arguments: %w", err)
+	}
+
+	// Call the scanRBAC function with the raw input
+	resp, err := scanRBAC(ctx, argsJSON)
+	if err != nil {
+		return nil, fmt.Errorf("RBAC scan failed: %w", err)
+	}
+
+	// Convert response to JSON
+	resultJSON, err := json.Marshal(resp)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal response: %w", err)
+	}
+
+	// Return the result in the expected format
+	return &mcp.CallToolResult{
+		Content: []mcp.Content{
+			mcp.NewTextContent(string(resultJSON)),
+		},
+	}, nil
+}
+
+

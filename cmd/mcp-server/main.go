@@ -12,36 +12,40 @@ import (
 	"github.com/tutran-se/permiflow/internal/mcp/server"
 )
 
-var (
-	cfg *config.Config
-)
-
 func main() {
+	// Create root command
 	rootCmd := &cobra.Command{
 		Use:   "mcp-server",
 		Short: "MCP server for Permiflow",
 		Long:  `MCP server that exposes Permiflow's RBAC scanning capabilities through the Model Context Protocol`,
-		RunE:  runServer,
 	}
 
-	// Add flags
-	rootCmd.PersistentFlags().StringVarP(&cfg.Transport, "transport", "t", "stdio", "Transport type (stdio or http)")
-	rootCmd.PersistentFlags().IntVarP(&cfg.HTTPPort, "http-port", "p", 8080, "HTTP port (only used with http transport)")
-	rootCmd.PersistentFlags().BoolVar(&cfg.Debug, "debug", false, "Enable debug logging")
-	rootCmd.PersistentFlags().StringVar(&cfg.Kubeconfig, "kubeconfig", "", "Path to kubeconfig file")
-	rootCmd.PersistentFlags().StringVar(&cfg.Context, "context", "", "Kubernetes context to use")
+	// Initialize config with default values
+	cfg := config.DefaultConfig()
 
+	// Add flags
+	rootCmd.Flags().StringVarP(&cfg.Transport, "transport", "t", cfg.Transport, "Transport type (stdio or http)")
+	rootCmd.Flags().IntVarP(&cfg.HTTPPort, "http-port", "p", cfg.HTTPPort, "HTTP port (only used with http transport)")
+	rootCmd.Flags().BoolVar(&cfg.Debug, "debug", cfg.Debug, "Enable debug logging")
+	rootCmd.Flags().StringVar(&cfg.Kubeconfig, "kubeconfig", cfg.Kubeconfig, "Path to kubeconfig file")
+	rootCmd.Flags().StringVar(&cfg.Context, "context", cfg.Context, "Kubernetes context to use")
+
+	// Set the RunE function
+	rootCmd.RunE = func(cmd *cobra.Command, args []string) error {
+		return runServer(cmd, cfg)
+	}
+
+	// Execute the root command
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatalf("Error: %v", err)
 	}
 }
 
-func runServer(cmd *cobra.Command, args []string) error {
-	// Load config from environment variables
-	cfg = config.DefaultConfig()
+func runServer(cmd *cobra.Command, cfg *config.Config) error {
+	// Load config from environment variables (overrides default values)
 	cfg.LoadFromEnv()
 
-	// Override with command line flags
+	// Override with command line flags if provided
 	if cmd.Flags().Changed("transport") {
 		transport, _ := cmd.Flags().GetString("transport")
 		cfg.Transport = transport
@@ -63,30 +67,48 @@ func runServer(cmd *cobra.Command, args []string) error {
 		cfg.Context = ctx
 	}
 
-	// Create and start server
-	srv := server.NewServer(cfg)
+	// Create server
+	srv, err := server.NewServer(cfg)
+	if err != nil {
+		log.Fatalf("Failed to create server: %v", err)
+	}
 
-	// Handle graceful shutdown
+	// Setup signal handling
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	// Start server in a goroutine
+	// Channel to handle server errors
+	errChan := make(chan error, 1)
+
+	// Start the server
 	go func() {
+		log.Printf("Starting MCP server with %s transport...", cfg.Transport)
 		if err := srv.Start(); err != nil {
-			log.Fatalf("Failed to start server: %v", err)
+			errChan <- err
 		}
 	}()
 
-	// Wait for interrupt signal
+	// Wait for interrupt signal or server error
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, os.Interrupt, syscall.SIGTERM)
-	
+
 	select {
-	case <-sigCh:
-		log.Println("Shutting down server...")
-		srv.Stop()
+	case err := <-errChan:
+		log.Printf("Server error: %v", err)
+		return err
+	case sig := <-sigCh:
+		log.Printf("Received signal %v, shutting down...", sig)
 	case <-ctx.Done():
+		log.Println("Context cancelled, shutting down...")
 	}
 
+	// Perform graceful shutdown
+	log.Println("Initiating graceful shutdown...")
+	if err := srv.Stop(); err != nil {
+		log.Printf("Error during server shutdown: %v", err)
+		return err
+	}
+
+	log.Println("Server stopped gracefully")
 	return nil
 }

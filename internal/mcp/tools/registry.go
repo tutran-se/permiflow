@@ -1,17 +1,23 @@
 package tools
 
-import "github.com/mark3labs/mcp-go/mcp"
+import (
+	mcp "github.com/mark3labs/mcp-go/mcp"
+	mcpServer "github.com/mark3labs/mcp-go/server"
+)
 
-// Registry holds all available MCP tools
-var Registry = []mcp.Tool{
-	ScanRBACTool,
-	// Add other tools here
+// RegisterTools registers all available tools with the MCP server
+func RegisterTools(server *mcpServer.MCPServer) error {
+	// Register RBAC scanning tool with its handler
+	server.AddTool(ScanRBACTool, Handler)
+	return nil
 }
 
-// RegisterTools registers all tools with the MCP server
-func RegisterTools(server *mcp.Server) error {
-	for _, tool := range Registry {
-		server.RegisterTool(tool)
+// GetTool returns a tool by name (currently not used but kept for future use)
+func GetTool(name string) *mcp.Tool {
+	switch name {
+	case "scan_rbac":
+		return &ScanRBACTool
+	default:
+		return nil
 	}
-	return nil
 }
