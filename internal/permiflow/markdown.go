@@ -18,7 +18,7 @@ func WriteMarkdown(bindings []AccessBinding, filename string, summary Summary) {
 	_, _ = fmt.Fprintln(f, "# Permiflow RBAC Audit Report")
 
 	// Summary
-	_, _ = fmt.Fprintln(f, "## 📊 Summary")
+	_, _ = fmt.Fprintln(f, "## Summary")
 	_, _ = fmt.Fprintf(f, "- Total bindings scanned: **%d**\n", len(bindings))
 	_, _ = fmt.Fprintf(f, "- Found %d cluster-admin binding(s)\n", summary.ClusterAdminBindings)
 	_, _ = fmt.Fprintf(f, "- Found %d wildcard verb usage(s)\n", summary.WildcardVerbs)
@@ -29,14 +29,14 @@ func WriteMarkdown(bindings []AccessBinding, filename string, summary Summary) {
 	_, _ = fmt.Fprintln(f, "\n---")
 
 	// Risk Levels
-	_, _ = fmt.Fprintln(f, "## 🚦 Risk Levels")
+	_, _ = fmt.Fprintln(f, "## Risk Levels")
 	_, _ = fmt.Fprintln(f, "- **HIGH**: Wildcard verbs or resources, privilege escalation risks")
 	_, _ = fmt.Fprintln(f, "- **MEDIUM**: Sensitive resources with non-wildcard verbs")
 	_, _ = fmt.Fprintln(f, "- **LOW**: Non-sensitive resources with non-wildcard verbs")
 	_, _ = fmt.Fprintln(f, "\n---")
 
 	// Table of Contents
-	_, _ = fmt.Fprintln(f, "## 📘 Table of Contents")
+	_, _ = fmt.Fprintln(f, "## Table of Contents")
 	for _, b := range bindings {
 		slug := slugify(fmt.Sprintf("%s-%s", b.Subject, b.SubjectKind))
 		_, _ = fmt.Fprintf(f, "- [%s (%s)](#%s)\n", b.Subject, b.SubjectKind, slug)

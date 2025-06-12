@@ -38,7 +38,7 @@ func ScanRBAC(clientset kubernetes.Interface) ([]AccessBinding, Summary) {
 	// Cache all ClusterRoles
 	clusterRoles, err := clientset.RbacV1().ClusterRoles().List(ctx, metav1.ListOptions{})
 	if err != nil {
-		log.Printf("%s Failed to list ClusterRoles: %v", Emoji("❌"), err)
+		log.Printf("Failed to list ClusterRoles: %v", err)
 		return results, summary
 	}
 	clusterRoleMap := make(map[string]rbacv1.ClusterRole)
@@ -49,36 +49,36 @@ func ScanRBAC(clientset kubernetes.Interface) ([]AccessBinding, Summary) {
 	// Scan ClusterRoleBindings (always)
 	crbs, err := clientset.RbacV1().ClusterRoleBindings().List(ctx, metav1.ListOptions{})
 	if err != nil {
-		log.Printf("%s Failed to list ClusterRoleBindings: %v", Emoji("❌"), err)
+		log.Printf("Failed to list ClusterRoleBindings: %v", err)
 		return results, summary
 	}
-	log.Printf("%s Found %d ClusterRoleBindings", Emoji("🔍"), len(crbs.Items))
+	log.Printf("Found %d ClusterRoleBindings", len(crbs.Items))
 	for _, crb := range crbs.Items {
 		role, ok := clusterRoleMap[crb.RoleRef.Name]
 		if !ok {
-			log.Printf("%s Skipping ClusterRoleBinding %s: ClusterRole %s not found", Emoji("⚠️"), crb.Name, crb.RoleRef.Name)
+			log.Printf("Skipping ClusterRoleBinding %s: ClusterRole %s not found", crb.Name, crb.RoleRef.Name)
 			continue
 		}
 
 		extractBindingsFromRole(crb.Subjects, crb.RoleRef.Name, "Cluster", role.Rules, &results, &summary)
 	}
 
-	// Namespace scan: either just one, or all
+	// Namespace scan
 	namespaces := []string{}
 	nsList, err := clientset.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
 	if err != nil {
-		log.Printf("%s Failed to list namespaces: %v", Emoji("❌"), err)
+		log.Printf("Failed to list namespaces: %v", err)
 		return results, summary
 	}
 	for _, ns := range nsList.Items {
 		namespaces = append(namespaces, ns.Name)
 	}
-	log.Printf("%s Scanning RoleBindings in %d namespaces", Emoji("📦"), len(namespaces))
+	log.Printf("Scanning RoleBindings in %d namespaces", len(namespaces))
 
 	for _, ns := range namespaces {
 		roleList, err := clientset.RbacV1().Roles(ns).List(ctx, metav1.ListOptions{})
 		if err != nil {
-			log.Printf("%s Failed to list Roles in namespace %s: %v", Emoji("❌"), ns, err)
+			log.Printf("Failed to list Roles in namespace %s: %v", ns, err)
 			continue
 		}
 		roleMap := make(map[string]rbacv1.Role)
@@ -88,10 +88,10 @@ func ScanRBAC(clientset kubernetes.Interface) ([]AccessBinding, Summary) {
 
 		rbs, err := clientset.RbacV1().RoleBindings(ns).List(ctx, metav1.ListOptions{})
 		if err != nil {
-			log.Printf("%s Failed to list RoleBindings in %s: %v", Emoji("❌"), ns, err)
+			log.Printf("Failed to list RoleBindings in %s: %v", ns, err)
 			continue
 		}
-		log.Printf("%s Found %d RoleBindings in namespace: %s", Emoji("🔍"), len(rbs.Items), ns)
+		log.Printf("Found %d RoleBindings in namespace: %s", len(rbs.Items), ns)
 
 		for _, rb := range rbs.Items {
 			var rules []rbacv1.PolicyRule
@@ -99,19 +99,19 @@ func ScanRBAC(clientset kubernetes.Interface) ([]AccessBinding, Summary) {
 			case "ClusterRole":
 				role, ok := clusterRoleMap[rb.RoleRef.Name]
 				if !ok {
-					log.Printf("%s Skipping RoleBinding %s: ClusterRole %s not found", Emoji("⚠️"), rb.Name, rb.RoleRef.Name)
+					log.Printf("Skipping RoleBinding %s: ClusterRole %s not found", rb.Name, rb.RoleRef.Name)
 					continue
 				}
 				rules = role.Rules
 			case "Role":
 				role, ok := roleMap[rb.RoleRef.Name]
 				if !ok {
-					log.Printf("%s Skipping RoleBinding %s: Role %s not found in namespace %s", Emoji("⚠️"), rb.Name, rb.RoleRef.Name, ns)
+					log.Printf("Skipping RoleBinding %s: Role %s not found in namespace %s", rb.Name, rb.RoleRef.Name, ns)
 					continue
 				}
 				rules = role.Rules
 			default:
-				log.Printf("%s Unknown RoleRef kind: %s in RoleBinding %s", Emoji("⚠️"), rb.RoleRef.Kind, rb.Name)
+				log.Printf("Unknown RoleRef kind: %s in RoleBinding %s", rb.RoleRef.Kind, rb.Name)
 				continue
 			}
 			extractBindingsFromRole(rb.Subjects, rb.RoleRef.Name, "Namespaced", rules, &results, &summary)
@@ -143,9 +143,9 @@ func extractBindingsFromRole(subjects []rbacv1.Subject, roleName, scope string, 
 }
 
 func updateSummary(summary *Summary, binding AccessBinding) {
-	var verbs = binding.Verbs
-	var resources = binding.Resources
-	var role = binding.Role
+	verbs := binding.Verbs
+	resources := binding.Resources
+	role := binding.Role
 
 	if role == "cluster-admin" {
 		summary.ClusterAdminBindings++

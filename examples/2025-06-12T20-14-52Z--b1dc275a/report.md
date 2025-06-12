@@ -1,5 +1,5 @@
 # Permiflow RBAC Audit Report
-## 📊 Summary
+## Summary
 - Total bindings scanned: **240**
 - Found 2 cluster-admin binding(s)
 - Found 3 wildcard verb usage(s)
@@ -9,13 +9,13 @@
 - Found 16 config read secrets access(es)
 
 ---
-## 🚦 Risk Levels
+## Risk Levels
 - **HIGH**: Wildcard verbs or resources, privilege escalation risks
 - **MEDIUM**: Sensitive resources with non-wildcard verbs
 - **LOW**: Non-sensitive resources with non-wildcard verbs
 
 ---
-## 📘 Table of Contents
+## Table of Contents
 - [clusterrole-aggregation-controller (ServiceAccount)](#clusterrole-aggregation-controller-serviceaccount)
 - [system:masters (Group)](#systemmasters-group)
 - [system:kube-proxy (User)](#systemkube-proxy-user)

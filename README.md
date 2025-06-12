@@ -20,9 +20,9 @@ Kubernetes RBAC is powerful — but opaque. Most tools either mutate live cluste
 
 **Permiflow** was built to make **RBAC visibility dead simple**, especially for security-conscious teams. With a single command, you get:
 
-- 📄 A clean, readable Markdown report (ideal for auditors, reviewers, and GRC)
-- 📊 A machine-parsable CSV/JSON export for analysis or GitOps flows
-- 🛡️ Peace of mind that your cluster was never touched or mutated
+- A clean, readable Markdown report (ideal for auditors, reviewers, and GRC)
+- A machine-parsable CSV/JSON export for analysis or GitOps flows
+- Peace of mind that your cluster was never touched or mutated
 
 No CRDs. No agents. No surprises.
 
@@ -42,11 +42,13 @@ Permiflow is made for:
 
 ## 🔧 What It Does
 
-- 📊 Scans `ClusterRoleBindings` and `RoleBindings`
-- 🔍 Expands roles into rules (verbs + resources)
-- 🧠 Classifies risks: `HIGH`, `MEDIUM`, `LOW`
-- 📄 Exports reports in **Markdown** (with ToC) and **CSV**
-- ✅ Flags dangerous permissions like:
+- Scans `ClusterRoleBindings` and `RoleBindings`
+- Expands roles into rules (verbs + resources)
+- Classifies risks: `HIGH`, `MEDIUM`, `LOW`
+- Exports reports in **Markdown** (with ToC), **CSV**, and **JSON** formats
+- Generates a **human-readable summary** of key findings
+- Provides a **scan history** for traceability and future comparisons
+- Flags dangerous permissions like:
   - `cluster-admin`
   - Wildcard verbs (`*`)
   - Access to sensitive resources (e.g. `secrets`)
@@ -71,18 +73,14 @@ go install github.com/tutran-se/permiflow@latest
 # Short version
 permiflow scan
 
-# Dry run (no output files)
+# Dry run: no files written, no scan history recorded.
 permiflow scan --dry-run
 
 # Full version
 permiflow scan \
   --kubeconfig ~/.kube/config \
-  --markdown \
-  --csv \
-  --json \
   --out-dir ./audit \
   --prefix report \
-  --plain
 ```
 
 Requires Go 1.21+
@@ -90,14 +88,14 @@ Requires Go 1.21+
 After running, you'll see a **timestamped output folder** like:
 
 ```
-./audit/2025-06-13T08-17-01Z--cafebabe/
+./audit/2025-06-13T08-17-01Z--d3d57c28/
 ├── report.md
 ├── report.csv
 ├── report.json
 ├── metadata.json
 ```
 
-- Each scan gets a unique **Scan ID** like `2025-06-13T08-17-01Z--cafebabe`
+- Each scan gets a unique **Scan ID** like `2025-06-13T08-17-01Z--d3d57c28`
 - A `metadata.json` file stores scan time, summary, and output context
 
 ---
@@ -106,7 +104,7 @@ After running, you'll see a **timestamped output folder** like:
 
 Permiflow tracks each scan for traceability and future comparison.
 
-### 📄 Each scan generates:
+### Each scan generates:
 
 A `metadata.json` file containing:
 
@@ -116,9 +114,9 @@ A `metadata.json` file containing:
 - **Output file names**
 - **Risk summary**
 
-### 📚 Global history is stored at:
+### Global history is stored at:
 
-.permiflow/history.json
+`.permiflow/history.json`
 
 Use the built-in CLI command to view your scan history:
 
@@ -127,12 +125,33 @@ permiflow history
 ```
 
 ```
-📚 Scan History
-────────────────────────────────────────────
-🆔 2025-06-13T08-17-01Z--cafebabe
-📁 audit/2025-06-13T08-17-01Z--cafebabe
-⏱  2025-06-13T08:17:01Z
-🛰  prod-us-east
+> go run . history
+Scan History
+--------------------------------------------
+Scan ID:    2025-06-12T08-58-17Z--94c7f21f
+Path:       audit/2025-06-12T08-58-17Z--94c7f21f
+Context:    (default)
+Timestamp:  2025-06-12T08:58:17Z
+
+Scan ID:    2025-06-12T09-11-50Z--52c65f0d
+Path:       audit/2025-06-12T09-11-50Z--52c65f0d
+Context:    (default)
+Timestamp:  2025-06-12T09:11:50Z
+
+Scan ID:    2025-06-12T09-20-45Z--8fb8fdf8
+Path:       examples/2025-06-12T09-20-45Z--8fb8fdf8
+Context:    (default)
+Timestamp:  2025-06-12T09:20:45Z
+
+Scan ID:    2025-06-12T09-21-21Z--7518e75f
+Path:       examples/2025-06-12T09-21-21Z--7518e75f
+Context:    (default)
+Timestamp:  2025-06-12T09:21:21Z
+
+Scan ID:    2025-06-12T19-39-37Z--d3d57c28
+Path:       audit/2025-06-12T19-39-37Z--d3d57c28
+Context:    (default)
+Timestamp:  2025-06-12T19:39:37Z
 ```
 
 ---
@@ -140,21 +159,23 @@ permiflow history
 ## 🔍 Example CLI Output
 
 ```
-🔍 Permiflow: Scanning RBAC...
-🔍 Found 51 ClusterRoleBindings
-📦 Scanning RoleBindings in 5 namespaces
-🔍 Found 0 RoleBindings in namespace: default
-🔍 Found 0 RoleBindings in namespace: dev
-🔍 Found 2 RoleBindings in namespace: uat
-🔍 Found 9 RoleBindings in namespace: stagging
-🔍 Found 0 RoleBindings in namespace: prod
-⏱ Scan completed in 410.46ms
-📄 Markdown written to: examples/report.md
-📊 CSV written to: examples/report.csv
-📦 JSON written to: examples/report.json
-📚 Scan history updated: .permiflow/history.json
-✅ Report complete. 240 bindings scanned.
-📊 Summary:
+> go run . scan --out-dir audit
+Permiflow: Scanning RBAC...
+Found 51 ClusterRoleBindings
+Scanning RoleBindings in 5 namespaces
+Found 0 RoleBindings in namespace: default
+Found 0 RoleBindings in namespace: dev
+Found 2 RoleBindings in namespace: uat
+Found 9 RoleBindings in namespace: stagging
+Found 0 RoleBindings in namespace: prod
+Scan completed in 403.99ms
+Metadata written to: audit/2025-06-12T20-03-59Z--63d5db96/metadata.json
+Markdown written to: audit/2025-06-12T20-03-59Z--63d5db96/report.md
+CSV written to: audit/2025-06-12T20-03-59Z--63d5db96/report.csv
+JSON written to: audit/2025-06-12T20-03-59Z--63d5db96/report.json
+Scan history updated: .permiflow/history.json
+Report complete. 240 bindings scanned.
+Summary:
    - Found 2 cluster-admin binding(s)
    - Found 3 wildcard verb usage(s)
    - Found 8 subject(s) with secrets access
@@ -168,21 +189,9 @@ permiflow history
 | Flag           | Type     | Description                                                                                     |
 | -------------- | -------- | ----------------------------------------------------------------------------------------------- |
 | `--kubeconfig` | `string` | Path to kubeconfig file (default: `~/.kube/config`)                                             |
-| `--markdown`   | `bool`   | Generate Markdown output (default: true; use --markdown=false to disable)                       |
-| `--csv`        | `bool`   | Generate CSV output (default: true; use --csv=false to disable)                                 |
-| `--json`       | `bool`   | Generate JSON output (default: true; use --json=false to disable)                               |
 | `--dry-run`    | `bool`   | Run scan without writing output files                                                           |
-| `--plain`      | `bool`   | Disable emojis in output                                                                        |
 | `--out-dir`    | `string` | Output directory for reports                                                                    |
 | `--prefix`     | `string` | Base name for output files (without extension). Example: 'audit' → audit.md (default: 'report') |
-
-### 🧪 Emoji Toggle
-
-Disable emojis using the `--plain` flag or:
-
-```bash
-export PERMIFLOW_NO_EMOJI=true
-```
 
 ---
 

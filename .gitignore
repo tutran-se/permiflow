@@ -20,6 +20,7 @@ vendor/
 # IDE/editor-specific
 .vscode/
 .idea/
+
 *.swp
 *.swo
 
@@ -41,3 +42,5 @@ tmp/
 
 # dist
 /dist/
+
+.permiflow/

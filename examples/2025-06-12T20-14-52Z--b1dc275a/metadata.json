@@ -1,8 +1,8 @@
 {
-  "scan_id": "2025-06-12T09-20-45Z--8fb8fdf8",
-  "timestamp": "2025-06-12T09:20:45Z",
+  "scan_id": "2025-06-12T20-14-52Z--b1dc275a",
+  "timestamp": "2025-06-12T20:14:52Z",
   "kubeconfig": "/home/twospwhid/.kube/config",
-  "out_dir": "examples/2025-06-12T09-20-45Z--8fb8fdf8",
+  "out_dir": "examples/2025-06-12T20-14-52Z--b1dc275a",
   "prefix": "report",
   "num_bindings": 240,
   "summary": {

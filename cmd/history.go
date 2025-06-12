@@ -16,16 +16,21 @@ var historyCmd = &cobra.Command{
 			return fmt.Errorf("failed to load scan history: %w", err)
 		}
 		if len(history) == 0 {
-			fmt.Println("📭 No scan history found. Run a scan first.")
+			fmt.Println("No scan history found. Run a scan first.")
 			return nil
 		}
 
-		fmt.Println("📚 Scan History")
-		fmt.Println("────────────────────────────────────────────")
+		fmt.Println("Scan History")
+		fmt.Println("--------------------------------------------")
 		for _, entry := range history {
-			fmt.Printf("🆔 %s\n", entry.ScanID)
-			fmt.Printf("📁 %s\n", entry.Path)
-			fmt.Printf("⏱  %s\n\n", entry.Timestamp)
+			fmt.Printf("Scan ID:    %s\n", entry.ScanID)
+			fmt.Printf("Path:       %s\n", entry.Path)
+			if entry.Context != "" {
+				fmt.Printf("Context:    %s\n", entry.Context)
+			} else {
+				fmt.Println("Context:    (default)")
+			}
+			fmt.Printf("Timestamp:  %s\n\n", entry.Timestamp)
 		}
 		return nil
 	},
