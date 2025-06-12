@@ -1,0 +1,241 @@
+Subject,Kind,Namespace,Role,Verbs,Resources,Scope,RiskLevel,Reason
+clusterrole-aggregation-controller,ServiceAccount,kube-system,system:controller:clusterrole-aggregation-controller,escalate get list patch update watch,clusterroles,Cluster,HIGH,Can update clusterroles (potential privilege escalation)
+system:masters,Group,,cluster-admin,*,,Cluster,HIGH,Wildcard verb or resource detected
+system:kube-proxy,User,,system:node-proxier,get list watch,nodes,Cluster,HIGH,Access to nodes (host-level access)
+kindnet,ServiceAccount,kube-system,kindnet,list watch,nodes,Cluster,HIGH,Access to nodes (host-level access)
+system:bootstrappers:kubeadm:default-node-token,Group,,kubeadm:get-nodes,get,nodes,Cluster,HIGH,Access to nodes (host-level access)
+system:kube-scheduler,User,,system:kube-scheduler,get list watch,nodes,Cluster,HIGH,Access to nodes (host-level access)
+system:kube-controller-manager,User,,system:kube-controller-manager,list watch,*,Cluster,HIGH,Wildcard verb or resource detected
+system:masters,Group,,cluster-admin,*,*,Cluster,HIGH,Wildcard verb or resource detected
+coredns,ServiceAccount,kube-system,system:coredns,get,nodes,Cluster,HIGH,Access to nodes (host-level access)
+kube-proxy,ServiceAccount,kube-system,system:node-proxier,get list watch,nodes,Cluster,HIGH,Access to nodes (host-level access)
+ttl-controller,ServiceAccount,kube-system,system:controller:ttl-controller,list patch update watch,nodes,Cluster,HIGH,Access to nodes (host-level access)
+service-controller,ServiceAccount,kube-system,system:controller:service-controller,list watch,nodes,Cluster,HIGH,Access to nodes (host-level access)
+local-path-provisioner-service-account,ServiceAccount,local-path-storage,local-path-provisioner-role,get list watch,nodes persistentvolumeclaims configmaps,Cluster,HIGH,Access to nodes (host-level access)
+local-path-provisioner-service-account,ServiceAccount,local-path-storage,local-path-provisioner-role,*,endpoints persistentvolumes pods,Cluster,HIGH,Wildcard verb or resource detected
+route-controller,ServiceAccount,kube-system,system:controller:route-controller,list watch,nodes,Cluster,HIGH,Access to nodes (host-level access)
+resourcequota-controller,ServiceAccount,kube-system,system:controller:resourcequota-controller,list watch,*,Cluster,HIGH,Wildcard verb or resource detected
+pod-garbage-collector,ServiceAccount,kube-system,system:controller:pod-garbage-collector,get list,nodes,Cluster,HIGH,Access to nodes (host-level access)
+persistent-volume-binder,ServiceAccount,kube-system,system:controller:persistent-volume-binder,get list,nodes,Cluster,HIGH,Access to nodes (host-level access)
+node-controller,ServiceAccount,kube-system,system:controller:node-controller,delete get list patch update,nodes,Cluster,HIGH,Access to nodes (host-level access)
+attachdetach-controller,ServiceAccount,kube-system,system:controller:attachdetach-controller,get list watch,nodes,Cluster,HIGH,Access to nodes (host-level access)
+namespace-controller,ServiceAccount,kube-system,system:controller:namespace-controller,delete deletecollection get list,*,Cluster,HIGH,Wildcard verb or resource detected
+horizontal-pod-autoscaler,ServiceAccount,kube-system,system:controller:horizontal-pod-autoscaler,get list,*,Cluster,HIGH,Wildcard verb or resource detected
+horizontal-pod-autoscaler,ServiceAccount,kube-system,system:controller:horizontal-pod-autoscaler,get list,*,Cluster,HIGH,Wildcard verb or resource detected
+generic-garbage-collector,ServiceAccount,kube-system,system:controller:generic-garbage-collector,delete get list patch update watch,*,Cluster,HIGH,Wildcard verb or resource detected
+endpointslice-controller,ServiceAccount,kube-system,system:controller:endpointslice-controller,get list watch,nodes pods services,Cluster,HIGH,Access to nodes (host-level access)
+daemon-set-controller,ServiceAccount,kube-system,system:controller:daemon-set-controller,list watch,nodes,Cluster,HIGH,Access to nodes (host-level access)
+system:kube-controller-manager,User,,system:kube-controller-manager,update,secrets serviceaccounts,Cluster,MEDIUM,Can access secrets (sensitive credential exposure)
+expand-controller,ServiceAccount,kube-system,system:controller:expand-controller,get,secrets,Cluster,MEDIUM,Can access secrets (sensitive credential exposure)
+token-cleaner,ServiceAccount,kube-system,system:controller:token-cleaner,delete get list watch,secrets,Namespaced,MEDIUM,Can access secrets (sensitive credential exposure)
+cloud-provider,ServiceAccount,kube-system,system:controller:cloud-provider,create get list watch,configmaps,Namespaced,MEDIUM,Can read configmaps (often contains credentials or API keys)
+bootstrap-signer,ServiceAccount,kube-system,system:controller:bootstrap-signer,get list watch,secrets,Namespaced,MEDIUM,Can access secrets (sensitive credential exposure)
+kube-scheduler,ServiceAccount,kube-system,system::leader-locking-kube-scheduler,get update,configmaps,Namespaced,MEDIUM,Can read configmaps (often contains credentials or API keys)
+system:kube-scheduler,User,,system::leader-locking-kube-scheduler,get update,configmaps,Namespaced,MEDIUM,Can read configmaps (often contains credentials or API keys)
+kube-controller-manager,ServiceAccount,kube-system,system::leader-locking-kube-controller-manager,get update,configmaps,Namespaced,MEDIUM,Can read configmaps (often contains credentials or API keys)
+system:kube-controller-manager,User,,system::leader-locking-kube-controller-manager,get update,configmaps,Namespaced,MEDIUM,Can read configmaps (often contains credentials or API keys)
+system:kube-scheduler,User,,extension-apiserver-authentication-reader,get list watch,configmaps,Namespaced,MEDIUM,Can read configmaps (often contains credentials or API keys)
+system:kube-controller-manager,User,,extension-apiserver-authentication-reader,get list watch,configmaps,Namespaced,MEDIUM,Can read configmaps (often contains credentials or API keys)
+system:nodes,Group,,kubeadm:nodes-kubeadm-config,get,configmaps,Namespaced,MEDIUM,Can read configmaps (often contains credentials or API keys)
+system:bootstrappers:kubeadm:default-node-token,Group,,kubeadm:nodes-kubeadm-config,get,configmaps,Namespaced,MEDIUM,Can read configmaps (often contains credentials or API keys)
+system:bootstrappers:kubeadm:default-node-token,Group,,kubeadm:kubelet-config,get,configmaps,Namespaced,MEDIUM,Can read configmaps (often contains credentials or API keys)
+system:nodes,Group,,kubeadm:kubelet-config,get,configmaps,Namespaced,MEDIUM,Can read configmaps (often contains credentials or API keys)
+system:bootstrappers:kubeadm:default-node-token,Group,,kube-proxy,get,configmaps,Namespaced,MEDIUM,Can read configmaps (often contains credentials or API keys)
+bootstrap-signer,ServiceAccount,kube-system,system:controller:bootstrap-signer,get list watch,configmaps,Namespaced,MEDIUM,Can read configmaps (often contains credentials or API keys)
+system:anonymous,User,,kubeadm:bootstrap-signer-clusterinfo,get,configmaps,Namespaced,MEDIUM,Can read configmaps (often contains credentials or API keys)
+system:kube-controller-manager,User,,system:kube-controller-manager,get,configmaps namespaces secrets serviceaccounts,Cluster,MEDIUM,Can access secrets (sensitive credential exposure)
+system:kube-controller-manager,User,,system:kube-controller-manager,delete,secrets,Cluster,MEDIUM,Can access secrets (sensitive credential exposure)
+system:kube-controller-manager,User,,system:kube-controller-manager,create,secrets serviceaccounts,Cluster,MEDIUM,Can access secrets (sensitive credential exposure)
+persistent-volume-binder,ServiceAccount,kube-system,system:controller:persistent-volume-binder,get,secrets,Cluster,MEDIUM,Can access secrets (sensitive credential exposure)
+statefulset-controller,ServiceAccount,kube-system,system:controller:statefulset-controller,update,statefulsets/status,Cluster,LOW,No known high-risk permissions
+route-controller,ServiceAccount,kube-system,system:controller:route-controller,patch,nodes/status,Cluster,LOW,No known high-risk permissions
+deployment-controller,ServiceAccount,kube-system,system:controller:deployment-controller,create delete get list patch update watch,replicasets,Cluster,LOW,No known high-risk permissions
+deployment-controller,ServiceAccount,kube-system,system:controller:deployment-controller,get list update watch,pods,Cluster,LOW,No known high-risk permissions
+deployment-controller,ServiceAccount,kube-system,system:controller:deployment-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+replicaset-controller,ServiceAccount,kube-system,system:controller:replicaset-controller,create delete list patch watch,pods,Cluster,LOW,No known high-risk permissions
+disruption-controller,ServiceAccount,kube-system,system:controller:disruption-controller,get list watch,replicasets,Cluster,LOW,No known high-risk permissions
+disruption-controller,ServiceAccount,kube-system,system:controller:disruption-controller,get list watch,replicationcontrollers,Cluster,LOW,No known high-risk permissions
+disruption-controller,ServiceAccount,kube-system,system:controller:disruption-controller,get list watch,poddisruptionbudgets,Cluster,LOW,No known high-risk permissions
+disruption-controller,ServiceAccount,kube-system,system:controller:disruption-controller,get list watch,statefulsets,Cluster,LOW,No known high-risk permissions
+disruption-controller,ServiceAccount,kube-system,system:controller:disruption-controller,update,poddisruptionbudgets/status,Cluster,LOW,No known high-risk permissions
+disruption-controller,ServiceAccount,kube-system,system:controller:disruption-controller,get,*/scale,Cluster,LOW,No known high-risk permissions
+disruption-controller,ServiceAccount,kube-system,system:controller:disruption-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+disruption-controller,ServiceAccount,kube-system,system:controller:disruption-controller,patch,pods/status,Cluster,LOW,No known high-risk permissions
+endpoint-controller,ServiceAccount,kube-system,system:controller:endpoint-controller,get list watch,pods services,Cluster,LOW,No known high-risk permissions
+endpoint-controller,ServiceAccount,kube-system,system:controller:endpoint-controller,create delete get list update,endpoints,Cluster,LOW,No known high-risk permissions
+endpoint-controller,ServiceAccount,kube-system,system:controller:endpoint-controller,create,endpoints/restricted,Cluster,LOW,No known high-risk permissions
+endpoint-controller,ServiceAccount,kube-system,system:controller:endpoint-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+attachdetach-controller,ServiceAccount,kube-system,system:controller:attachdetach-controller,get list watch,csidrivers,Cluster,LOW,No known high-risk permissions
+endpointslice-controller,ServiceAccount,kube-system,system:controller:endpointslice-controller,update,services/finalizers,Cluster,LOW,No known high-risk permissions
+endpointslice-controller,ServiceAccount,kube-system,system:controller:endpointslice-controller,create delete get list update,endpointslices,Cluster,LOW,No known high-risk permissions
+endpointslice-controller,ServiceAccount,kube-system,system:controller:endpointslice-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+endpointslicemirroring-controller,ServiceAccount,kube-system,system:controller:endpointslicemirroring-controller,get list watch,endpoints services,Cluster,LOW,No known high-risk permissions
+endpointslicemirroring-controller,ServiceAccount,kube-system,system:controller:endpointslicemirroring-controller,update,services/finalizers,Cluster,LOW,No known high-risk permissions
+endpointslicemirroring-controller,ServiceAccount,kube-system,system:controller:endpointslicemirroring-controller,update,endpoints/finalizers,Cluster,LOW,No known high-risk permissions
+endpointslicemirroring-controller,ServiceAccount,kube-system,system:controller:endpointslicemirroring-controller,create delete get list update,endpointslices,Cluster,LOW,No known high-risk permissions
+endpointslicemirroring-controller,ServiceAccount,kube-system,system:controller:endpointslicemirroring-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+ephemeral-volume-controller,ServiceAccount,kube-system,system:controller:ephemeral-volume-controller,get list watch,pods,Cluster,LOW,No known high-risk permissions
+ephemeral-volume-controller,ServiceAccount,kube-system,system:controller:ephemeral-volume-controller,update,pods/finalizers,Cluster,LOW,No known high-risk permissions
+ephemeral-volume-controller,ServiceAccount,kube-system,system:controller:ephemeral-volume-controller,create get list watch,persistentvolumeclaims,Cluster,LOW,No known high-risk permissions
+ephemeral-volume-controller,ServiceAccount,kube-system,system:controller:ephemeral-volume-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+expand-controller,ServiceAccount,kube-system,system:controller:expand-controller,get list patch update watch,persistentvolumes,Cluster,LOW,No known high-risk permissions
+expand-controller,ServiceAccount,kube-system,system:controller:expand-controller,patch update,persistentvolumeclaims/status,Cluster,LOW,No known high-risk permissions
+expand-controller,ServiceAccount,kube-system,system:controller:expand-controller,get list watch,persistentvolumeclaims,Cluster,LOW,No known high-risk permissions
+expand-controller,ServiceAccount,kube-system,system:controller:expand-controller,get list watch,storageclasses,Cluster,LOW,No known high-risk permissions
+expand-controller,ServiceAccount,kube-system,system:controller:expand-controller,get,endpoints services,Cluster,LOW,No known high-risk permissions
+deployment-controller,ServiceAccount,kube-system,system:controller:deployment-controller,update,deployments/status,Cluster,LOW,No known high-risk permissions
+expand-controller,ServiceAccount,kube-system,system:controller:expand-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+attachdetach-controller,ServiceAccount,kube-system,system:controller:attachdetach-controller,create delete get list watch,volumeattachments,Cluster,LOW,No known high-risk permissions
+generic-garbage-collector,ServiceAccount,kube-system,system:controller:generic-garbage-collector,create patch update,events,Cluster,LOW,No known high-risk permissions
+horizontal-pod-autoscaler,ServiceAccount,kube-system,system:controller:horizontal-pod-autoscaler,get list watch,horizontalpodautoscalers,Cluster,LOW,No known high-risk permissions
+horizontal-pod-autoscaler,ServiceAccount,kube-system,system:controller:horizontal-pod-autoscaler,update,horizontalpodautoscalers/status,Cluster,LOW,No known high-risk permissions
+horizontal-pod-autoscaler,ServiceAccount,kube-system,system:controller:horizontal-pod-autoscaler,get update,*/scale,Cluster,LOW,No known high-risk permissions
+horizontal-pod-autoscaler,ServiceAccount,kube-system,system:controller:horizontal-pod-autoscaler,list,pods,Cluster,LOW,No known high-risk permissions
+horizontal-pod-autoscaler,ServiceAccount,kube-system,system:controller:horizontal-pod-autoscaler,list,pods,Cluster,LOW,No known high-risk permissions
+attachdetach-controller,ServiceAccount,kube-system,system:controller:attachdetach-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+attachdetach-controller,ServiceAccount,kube-system,system:controller:attachdetach-controller,list watch,pods,Cluster,LOW,No known high-risk permissions
+horizontal-pod-autoscaler,ServiceAccount,kube-system,system:controller:horizontal-pod-autoscaler,create patch update,events,Cluster,LOW,No known high-risk permissions
+job-controller,ServiceAccount,kube-system,system:controller:job-controller,get list patch update watch,jobs,Cluster,LOW,No known high-risk permissions
+job-controller,ServiceAccount,kube-system,system:controller:job-controller,update,jobs/status,Cluster,LOW,No known high-risk permissions
+job-controller,ServiceAccount,kube-system,system:controller:job-controller,update,jobs/finalizers,Cluster,LOW,No known high-risk permissions
+job-controller,ServiceAccount,kube-system,system:controller:job-controller,create delete list patch watch,pods,Cluster,LOW,No known high-risk permissions
+job-controller,ServiceAccount,kube-system,system:controller:job-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+resourcequota-controller,ServiceAccount,kube-system,system:controller:resourcequota-controller,update,resourcequotas/status,Cluster,LOW,No known high-risk permissions
+namespace-controller,ServiceAccount,kube-system,system:controller:namespace-controller,update,namespaces/finalize namespaces/status,Cluster,LOW,No known high-risk permissions
+attachdetach-controller,ServiceAccount,kube-system,system:controller:attachdetach-controller,patch update,nodes/status,Cluster,LOW,No known high-risk permissions
+attachdetach-controller,ServiceAccount,kube-system,system:controller:attachdetach-controller,list watch,persistentvolumeclaims persistentvolumes,Cluster,LOW,No known high-risk permissions
+node-controller,ServiceAccount,kube-system,system:controller:node-controller,patch update,nodes/status,Cluster,LOW,No known high-risk permissions
+node-controller,ServiceAccount,kube-system,system:controller:node-controller,patch update,pods/status,Cluster,LOW,No known high-risk permissions
+node-controller,ServiceAccount,kube-system,system:controller:node-controller,delete list,pods,Cluster,LOW,No known high-risk permissions
+node-controller,ServiceAccount,kube-system,system:controller:node-controller,create get list update,clustercidrs,Cluster,LOW,No known high-risk permissions
+node-controller,ServiceAccount,kube-system,system:controller:node-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+node-controller,ServiceAccount,kube-system,system:controller:node-controller,get,pods,Cluster,LOW,No known high-risk permissions
+persistent-volume-binder,ServiceAccount,kube-system,system:controller:persistent-volume-binder,create delete get list update watch,persistentvolumes,Cluster,LOW,No known high-risk permissions
+persistent-volume-binder,ServiceAccount,kube-system,system:controller:persistent-volume-binder,update,persistentvolumes/status,Cluster,LOW,No known high-risk permissions
+persistent-volume-binder,ServiceAccount,kube-system,system:controller:persistent-volume-binder,get list update watch,persistentvolumeclaims,Cluster,LOW,No known high-risk permissions
+persistent-volume-binder,ServiceAccount,kube-system,system:controller:persistent-volume-binder,update,persistentvolumeclaims/status,Cluster,LOW,No known high-risk permissions
+persistent-volume-binder,ServiceAccount,kube-system,system:controller:persistent-volume-binder,create delete get list watch,pods,Cluster,LOW,No known high-risk permissions
+persistent-volume-binder,ServiceAccount,kube-system,system:controller:persistent-volume-binder,get list watch,storageclasses,Cluster,LOW,No known high-risk permissions
+persistent-volume-binder,ServiceAccount,kube-system,system:controller:persistent-volume-binder,create delete get update,endpoints,Cluster,LOW,No known high-risk permissions
+persistent-volume-binder,ServiceAccount,kube-system,system:controller:persistent-volume-binder,create delete get,services,Cluster,LOW,No known high-risk permissions
+deployment-controller,ServiceAccount,kube-system,system:controller:deployment-controller,get list update watch,deployments,Cluster,LOW,No known high-risk permissions
+system:authenticated,Group,,system:basic-user,create,selfsubjectreviews,Cluster,LOW,No known high-risk permissions
+persistent-volume-binder,ServiceAccount,kube-system,system:controller:persistent-volume-binder,watch,events,Cluster,LOW,No known high-risk permissions
+persistent-volume-binder,ServiceAccount,kube-system,system:controller:persistent-volume-binder,create patch update,events,Cluster,LOW,No known high-risk permissions
+pod-garbage-collector,ServiceAccount,kube-system,system:controller:pod-garbage-collector,delete list watch,pods,Cluster,LOW,No known high-risk permissions
+system:authenticated,Group,,system:basic-user,create,selfsubjectaccessreviews selfsubjectrulesreviews,Cluster,LOW,No known high-risk permissions
+pod-garbage-collector,ServiceAccount,kube-system,system:controller:pod-garbage-collector,patch,pods/status,Cluster,LOW,No known high-risk permissions
+pv-protection-controller,ServiceAccount,kube-system,system:controller:pv-protection-controller,get list update watch,persistentvolumes,Cluster,LOW,No known high-risk permissions
+pv-protection-controller,ServiceAccount,kube-system,system:controller:pv-protection-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+pvc-protection-controller,ServiceAccount,kube-system,system:controller:pvc-protection-controller,get list update watch,persistentvolumeclaims,Cluster,LOW,No known high-risk permissions
+pvc-protection-controller,ServiceAccount,kube-system,system:controller:pvc-protection-controller,get list watch,pods,Cluster,LOW,No known high-risk permissions
+pvc-protection-controller,ServiceAccount,kube-system,system:controller:pvc-protection-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+replicaset-controller,ServiceAccount,kube-system,system:controller:replicaset-controller,get list update watch,replicasets,Cluster,LOW,No known high-risk permissions
+certificate-controller,ServiceAccount,kube-system,system:controller:certificate-controller,create,subjectaccessreviews,Cluster,LOW,No known high-risk permissions
+certificate-controller,ServiceAccount,kube-system,system:controller:certificate-controller,update,certificatesigningrequests/approval certificatesigningrequests/status,Cluster,LOW,No known high-risk permissions
+disruption-controller,ServiceAccount,kube-system,system:controller:disruption-controller,get list watch,deployments,Cluster,LOW,No known high-risk permissions
+replicaset-controller,ServiceAccount,kube-system,system:controller:replicaset-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+replication-controller,ServiceAccount,kube-system,system:controller:replication-controller,get list update watch,replicationcontrollers,Cluster,LOW,No known high-risk permissions
+replication-controller,ServiceAccount,kube-system,system:controller:replication-controller,update,replicationcontrollers/status,Cluster,LOW,No known high-risk permissions
+replication-controller,ServiceAccount,kube-system,system:controller:replication-controller,update,replicationcontrollers/finalizers,Cluster,LOW,No known high-risk permissions
+replication-controller,ServiceAccount,kube-system,system:controller:replication-controller,create delete list patch watch,pods,Cluster,LOW,No known high-risk permissions
+replication-controller,ServiceAccount,kube-system,system:controller:replication-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+local-path-provisioner-service-account,ServiceAccount,local-path-storage,local-path-provisioner-role,get list watch,storageclasses,Cluster,LOW,No known high-risk permissions
+namespace-controller,ServiceAccount,kube-system,system:controller:namespace-controller,delete get list watch,namespaces,Cluster,LOW,No known high-risk permissions
+deployment-controller,ServiceAccount,kube-system,system:controller:deployment-controller,update,deployments/finalizers,Cluster,LOW,No known high-risk permissions
+kube-scheduler,ServiceAccount,kube-system,system::leader-locking-kube-scheduler,watch,configmaps,Namespaced,LOW,No known high-risk permissions
+root-ca-cert-publisher,ServiceAccount,kube-system,system:controller:root-ca-cert-publisher,create patch update,events,Cluster,LOW,No known high-risk permissions
+local-path-provisioner-service-account,ServiceAccount,local-path-storage,local-path-provisioner-role,create patch,events,Cluster,LOW,No known high-risk permissions
+resourcequota-controller,ServiceAccount,kube-system,system:controller:resourcequota-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+route-controller,ServiceAccount,kube-system,system:controller:route-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+service-account-controller,ServiceAccount,kube-system,system:controller:service-account-controller,create,serviceaccounts,Cluster,LOW,No known high-risk permissions
+service-account-controller,ServiceAccount,kube-system,system:controller:service-account-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+service-controller,ServiceAccount,kube-system,system:controller:service-controller,get list watch,services,Cluster,LOW,No known high-risk permissions
+service-controller,ServiceAccount,kube-system,system:controller:service-controller,patch update,services/status,Cluster,LOW,No known high-risk permissions
+kube-proxy,ServiceAccount,kube-system,system:node-proxier,list watch,endpointslices,Cluster,LOW,No known high-risk permissions
+service-controller,ServiceAccount,kube-system,system:controller:service-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+statefulset-controller,ServiceAccount,kube-system,system:controller:statefulset-controller,list watch,pods,Cluster,LOW,No known high-risk permissions
+statefulset-controller,ServiceAccount,kube-system,system:controller:statefulset-controller,get list watch,statefulsets,Cluster,LOW,No known high-risk permissions
+replicaset-controller,ServiceAccount,kube-system,system:controller:replicaset-controller,update,replicasets/finalizers,Cluster,LOW,No known high-risk permissions
+statefulset-controller,ServiceAccount,kube-system,system:controller:statefulset-controller,update,statefulsets/finalizers,Cluster,LOW,No known high-risk permissions
+statefulset-controller,ServiceAccount,kube-system,system:controller:statefulset-controller,create delete get patch update,pods,Cluster,LOW,No known high-risk permissions
+statefulset-controller,ServiceAccount,kube-system,system:controller:statefulset-controller,create delete get list patch update watch,controllerrevisions,Cluster,LOW,No known high-risk permissions
+statefulset-controller,ServiceAccount,kube-system,system:controller:statefulset-controller,create get,persistentvolumeclaims,Cluster,LOW,No known high-risk permissions
+statefulset-controller,ServiceAccount,kube-system,system:controller:statefulset-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+statefulset-controller,ServiceAccount,kube-system,system:controller:statefulset-controller,delete update,persistentvolumeclaims,Cluster,LOW,No known high-risk permissions
+ttl-after-finished-controller,ServiceAccount,kube-system,system:controller:ttl-after-finished-controller,delete get list watch,jobs,Cluster,LOW,No known high-risk permissions
+ttl-after-finished-controller,ServiceAccount,kube-system,system:controller:ttl-after-finished-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+kube-proxy,ServiceAccount,kube-system,system:node-proxier,create patch update,events,Cluster,LOW,No known high-risk permissions
+ttl-controller,ServiceAccount,kube-system,system:controller:ttl-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+coredns,ServiceAccount,kube-system,system:coredns,list watch,endpoints services pods namespaces,Cluster,LOW,No known high-risk permissions
+kube-proxy,ServiceAccount,kube-system,system:node-proxier,list watch,endpoints services,Cluster,LOW,No known high-risk permissions
+coredns,ServiceAccount,kube-system,system:coredns,list watch,endpointslices,Cluster,LOW,No known high-risk permissions
+system:authenticated,Group,,system:discovery,get,,Cluster,LOW,No known high-risk permissions
+system:kube-controller-manager,User,,system:kube-controller-manager,create patch update,events,Cluster,LOW,No known high-risk permissions
+system:kube-controller-manager,User,,system:kube-controller-manager,create,leases,Cluster,LOW,No known high-risk permissions
+system:kube-controller-manager,User,,system:kube-controller-manager,get update,leases,Cluster,LOW,No known high-risk permissions
+system:kube-controller-manager,User,,system:kube-controller-manager,create,endpoints,Cluster,LOW,No known high-risk permissions
+system:kube-controller-manager,User,,system:kube-controller-manager,get update,endpoints,Cluster,LOW,No known high-risk permissions
+daemon-set-controller,ServiceAccount,kube-system,system:controller:daemon-set-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+daemon-set-controller,ServiceAccount,kube-system,system:controller:daemon-set-controller,create delete get list patch update watch,controllerrevisions,Cluster,LOW,No known high-risk permissions
+daemon-set-controller,ServiceAccount,kube-system,system:controller:daemon-set-controller,create,pods/binding,Cluster,LOW,No known high-risk permissions
+system:nodes,Group,,system:certificates.k8s.io:certificatesigningrequests:selfnodeclient,create,certificatesigningrequests/selfnodeclient,Cluster,LOW,No known high-risk permissions
+system:kube-controller-manager,User,,system:kube-controller-manager,create,tokenreviews,Cluster,LOW,No known high-risk permissions
+system:kube-controller-manager,User,,system:kube-controller-manager,create,subjectaccessreviews,Cluster,LOW,No known high-risk permissions
+system:bootstrappers:kubeadm:default-node-token,Group,,system:certificates.k8s.io:certificatesigningrequests:nodeclient,create,certificatesigningrequests/nodeclient,Cluster,LOW,No known high-risk permissions
+system:kube-controller-manager,User,,system:kube-controller-manager,create,serviceaccounts/token,Cluster,LOW,No known high-risk permissions
+kube-dns,ServiceAccount,kube-system,system:kube-dns,list watch,endpoints services,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,create patch update,events,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,create,leases,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,get update,leases,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,create,endpoints,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,get update,endpoints,Cluster,LOW,No known high-risk permissions
+system:bootstrappers:kubeadm:default-node-token,Group,,system:node-bootstrapper,create get list watch,certificatesigningrequests,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,delete get list watch,pods,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,create,bindings pods/binding,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,patch update,pods/status,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,get list watch,replicationcontrollers services,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,get list watch,replicasets,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,get list watch,statefulsets,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,get list watch,poddisruptionbudgets,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,get list watch,persistentvolumeclaims persistentvolumes,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,create,tokenreviews,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,create,subjectaccessreviews,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,get list watch,csinodes,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,get list watch,namespaces,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,get list watch,csidrivers,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:kube-scheduler,get list watch,csistoragecapacities,Cluster,LOW,No known high-risk permissions
+system:monitoring,Group,,system:monitoring,get,,Cluster,LOW,No known high-risk permissions
+system:kube-proxy,User,,system:node-proxier,list watch,endpoints services,Cluster,LOW,No known high-risk permissions
+kindnet,ServiceAccount,kube-system,kindnet,use,podsecuritypolicies,Cluster,LOW,No known high-risk permissions
+system:kube-proxy,User,,system:node-proxier,create patch update,events,Cluster,LOW,No known high-risk permissions
+system:kube-proxy,User,,system:node-proxier,list watch,endpointslices,Cluster,LOW,No known high-risk permissions
+system:authenticated,Group,,system:public-info-viewer,get,,Cluster,LOW,No known high-risk permissions
+system:unauthenticated,Group,,system:public-info-viewer,get,,Cluster,LOW,No known high-risk permissions
+system:serviceaccounts,Group,,system:service-account-issuer-discovery,get,,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:volume-scheduler,get list patch update watch,persistentvolumes,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:volume-scheduler,get list watch,storageclasses,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system:volume-scheduler,get list patch update watch,persistentvolumeclaims,Cluster,LOW,No known high-risk permissions
+daemon-set-controller,ServiceAccount,kube-system,system:controller:daemon-set-controller,create delete list patch watch,pods,Cluster,LOW,No known high-risk permissions
+attachdetach-controller,ServiceAccount,kube-system,system:controller:attachdetach-controller,get list watch,csinodes,Cluster,LOW,No known high-risk permissions
+bootstrap-signer,ServiceAccount,kube-system,system:controller:bootstrap-signer,update,configmaps,Namespaced,LOW,No known high-risk permissions
+bootstrap-signer,ServiceAccount,kube-system,system:controller:bootstrap-signer,create patch update,events,Namespaced,LOW,No known high-risk permissions
+daemon-set-controller,ServiceAccount,kube-system,system:controller:daemon-set-controller,update,daemonsets/finalizers,Cluster,LOW,No known high-risk permissions
+daemon-set-controller,ServiceAccount,kube-system,system:controller:daemon-set-controller,update,daemonsets/status,Cluster,LOW,No known high-risk permissions
+daemon-set-controller,ServiceAccount,kube-system,system:controller:daemon-set-controller,get list watch,daemonsets,Cluster,LOW,No known high-risk permissions
+cronjob-controller,ServiceAccount,kube-system,system:controller:cronjob-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+cronjob-controller,ServiceAccount,kube-system,system:controller:cronjob-controller,delete list,pods,Cluster,LOW,No known high-risk permissions
+cronjob-controller,ServiceAccount,kube-system,system:controller:cronjob-controller,update,cronjobs/finalizers,Cluster,LOW,No known high-risk permissions
+cronjob-controller,ServiceAccount,kube-system,system:controller:cronjob-controller,update,cronjobs/status,Cluster,LOW,No known high-risk permissions
+system:kube-controller-manager,User,,system::leader-locking-kube-controller-manager,watch,configmaps,Namespaced,LOW,No known high-risk permissions
+cronjob-controller,ServiceAccount,kube-system,system:controller:cronjob-controller,create delete get list patch update watch,jobs,Cluster,LOW,No known high-risk permissions
+kube-controller-manager,ServiceAccount,kube-system,system::leader-locking-kube-controller-manager,watch,configmaps,Namespaced,LOW,No known high-risk permissions
+cronjob-controller,ServiceAccount,kube-system,system:controller:cronjob-controller,get list update watch,cronjobs,Cluster,LOW,No known high-risk permissions
+system:kube-scheduler,User,,system::leader-locking-kube-scheduler,watch,configmaps,Namespaced,LOW,No known high-risk permissions
+certificate-controller,ServiceAccount,kube-system,system:controller:certificate-controller,delete get list watch,certificatesigningrequests,Cluster,LOW,No known high-risk permissions
+root-ca-cert-publisher,ServiceAccount,kube-system,system:controller:root-ca-cert-publisher,create update,configmaps,Cluster,LOW,No known high-risk permissions
+certificate-controller,ServiceAccount,kube-system,system:controller:certificate-controller,create patch update,events,Cluster,LOW,No known high-risk permissions
+replicaset-controller,ServiceAccount,kube-system,system:controller:replicaset-controller,update,replicasets/status,Cluster,LOW,No known high-risk permissions
+certificate-controller,ServiceAccount,kube-system,system:controller:certificate-controller,sign,signers,Cluster,LOW,No known high-risk permissions
+certificate-controller,ServiceAccount,kube-system,system:controller:certificate-controller,approve,signers,Cluster,LOW,No known high-risk permissions
+token-cleaner,ServiceAccount,kube-system,system:controller:token-cleaner,create patch update,events,Namespaced,LOW,No known high-risk permissions

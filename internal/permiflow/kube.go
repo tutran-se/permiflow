@@ -19,3 +19,11 @@ func GetKubeClient(kubeconfigPath string) *kubernetes.Clientset {
 	}
 	return clientset
 }
+
+func GetCurrentContext(kubeconfig string) string {
+	cfg, err := clientcmd.LoadFromFile(kubeconfig)
+	if err != nil {
+		return "unknown"
+	}
+	return cfg.CurrentContext
+}

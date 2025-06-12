@@ -87,11 +87,51 @@ permiflow scan \
 
 Requires Go 1.21+
 
-After running, you'll see:
+After running, you'll see a **timestamped output folder** like:
 
-- `./audit/report.md`
-- `./audit/report.csv`
-- `./audit/report.json`
+```
+./audit/2025-06-13T08-17-01Z--cafebabe/
+├── report.md
+├── report.csv
+├── report.json
+├── metadata.json
+```
+
+- Each scan gets a unique **Scan ID** like `2025-06-13T08-17-01Z--cafebabe`
+- A `metadata.json` file stores scan time, summary, and output context
+
+## 🧾 Metadata & Scan History
+
+Permiflow tracks each scan for traceability and future comparison.
+
+### 📄 Each scan generates:
+
+A `metadata.json` file containing:
+
+- **Scan ID**
+- **Timestamp**
+- **Cluster context**
+- **Output file names**
+- **Risk summary**
+
+### 📚 Global history is stored at:
+
+.permiflow/history.json
+
+Use the built-in CLI command to view your scan history:
+
+```bash
+permiflow history
+```
+
+```
+📚 Scan History
+────────────────────────────────────────────
+🆔 2025-06-13T08-17-01Z--cafebabe
+📁 audit/2025-06-13T08-17-01Z--cafebabe
+⏱  2025-06-13T08:17:01Z
+🛰  prod-us-east
+```
 
 ---
 
@@ -122,6 +162,7 @@ Customizable via `--out-dir` and `--prefix`.
 📄 Markdown written to: examples/report.md
 📊 CSV written to: examples/report.csv
 📦 JSON written to: examples/report.json
+📚 Scan history updated: .permiflow/history.json
 ✅ Report complete. 240 bindings scanned.
 📊 Summary:
    - Found 2 cluster-admin binding(s)

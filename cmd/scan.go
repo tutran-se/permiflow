@@ -75,30 +75,71 @@ var scanCmd = &cobra.Command{
 		elapsed := time.Since(start)
 		log.Printf("%s Scan completed in %.2fms", permiflow.Emoji("⏱"), elapsed.Seconds()*1000)
 
-		if err := os.MkdirAll(outputDir, 0755); err != nil {
-			return fmt.Errorf("failed to create output directory: %w", err)
-		}
-
 		if dryRun {
 			log.Printf("%s Dry run enabled — no files will be written.", permiflow.Emoji("🧪"))
 		} else {
+			// Generate timestamp-based scan ID with short random suffix
+			scanTime := time.Now().UTC().Format("2006-01-02T15-04-05Z")
+			randomSuffix := permiflow.ShortRandomString(8) // e.g., "cafebabe"
+			scanID := fmt.Sprintf("%s--%s", scanTime, randomSuffix)
+
+			// Override outputDir to include this versioned subfolder
+			versionedDir := filepath.Join(outputDir, scanID)
+			if err := os.MkdirAll(versionedDir, 0755); err != nil {
+				return fmt.Errorf("failed to create output directory: %w", err)
+			}
+
+			meta := permiflow.ScanMetadata{
+				ScanID:      scanID,
+				Timestamp:   time.Now().UTC().Format(time.RFC3339),
+				Kubeconfig:  kubeconfig,
+				OutDir:      versionedDir,
+				Prefix:      outputPrefix,
+				NumBindings: len(bindings),
+				Summary:     summary,
+				OutputFiles: []string{},
+			}
+
 			if markdownOut {
-				mdPath := filepath.Join(outputDir, outputPrefix+".md")
+				meta.OutputFiles = append(meta.OutputFiles, outputPrefix+".md")
+			}
+			if csvOut {
+				meta.OutputFiles = append(meta.OutputFiles, outputPrefix+".csv")
+			}
+			if JSONOut {
+				meta.OutputFiles = append(meta.OutputFiles, outputPrefix+".json")
+			}
+
+			if err := permiflow.WriteMetadata(meta, versionedDir); err != nil {
+				log.Printf("%s Failed to write metadata.json: %v", permiflow.Emoji("❌"), err)
+			} else {
+				log.Printf("%s Metadata written to: %s", permiflow.Emoji("🧾"), filepath.Join(versionedDir, "metadata.json"))
+			}
+
+			if markdownOut {
+				mdPath := filepath.Join(versionedDir, outputPrefix+".md")
 				permiflow.WriteMarkdown(bindings, mdPath, summary)
 				log.Printf("%s Markdown written to: %s", permiflow.Emoji("📄"), mdPath)
 			}
 			if csvOut {
-				csvPath := filepath.Join(outputDir, outputPrefix+".csv")
+				csvPath := filepath.Join(versionedDir, outputPrefix+".csv")
 				permiflow.WriteCSV(bindings, csvPath)
 				log.Printf("%s CSV written to: %s", permiflow.Emoji("📊"), csvPath)
 			}
 
 			if JSONOut {
-				jsonPath := filepath.Join(outputDir, outputPrefix+".json")
-				if err := permiflow.WriteJSON(bindings, summary, outputDir, outputPrefix); err != nil {
+				jsonPath := filepath.Join(versionedDir, outputPrefix+".json")
+				if err := permiflow.WriteJSON(bindings, summary, versionedDir, outputPrefix); err != nil {
 					return fmt.Errorf("failed to write JSON report: %w", err)
 				}
 				log.Printf("%s JSON written to: %s", permiflow.Emoji("📦"), jsonPath)
+			}
+
+			contextName := permiflow.GetCurrentContext(kubeconfig)
+			if err := permiflow.AppendToHistory(scanID, versionedDir, contextName); err != nil {
+				log.Printf("%s Failed to update scan history: %v", permiflow.Emoji("❌"), err)
+			} else {
+				log.Printf("%s Scan history updated: %s", permiflow.Emoji("📚"), ".permiflow/history.json")
 			}
 		}
 		log.Printf("%s Report complete. %d bindings scanned.", permiflow.Emoji("✅"), len(bindings))

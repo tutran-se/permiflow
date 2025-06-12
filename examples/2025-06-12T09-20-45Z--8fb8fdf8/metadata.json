@@ -1,0 +1,21 @@
+{
+  "scan_id": "2025-06-12T09-20-45Z--8fb8fdf8",
+  "timestamp": "2025-06-12T09:20:45Z",
+  "kubeconfig": "/home/twospwhid/.kube/config",
+  "out_dir": "examples/2025-06-12T09-20-45Z--8fb8fdf8",
+  "prefix": "report",
+  "num_bindings": 240,
+  "summary": {
+    "ClusterAdminBindings": 2,
+    "WildcardVerbs": 3,
+    "SecretsAccess": 8,
+    "PrivilegeEscalation": 0,
+    "ExecAccess": 16,
+    "ConfigReadSecrets": 16
+  },
+  "output_files": [
+    "report.md",
+    "report.csv",
+    "report.json"
+  ]
+}
