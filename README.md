@@ -100,6 +100,8 @@ After running, you'll see a **timestamped output folder** like:
 - Each scan gets a unique **Scan ID** like `2025-06-13T08-17-01Z--cafebabe`
 - A `metadata.json` file stores scan time, summary, and output context
 
+---
+
 ## 🧾 Metadata & Scan History
 
 Permiflow tracks each scan for traceability and future comparison.
@@ -134,18 +136,6 @@ permiflow history
 ```
 
 ---
-
-## 📦 Output Structure
-
-Permiflow generates two files by default:
-
-| File          | Purpose                                   |
-| ------------- | ----------------------------------------- |
-| `report.md`   | Human-friendly access summary             |
-| `report.csv`  | Structured table of roles and permissions |
-| `report.json` | Machine-readable JSON format              |
-
-Customizable via `--out-dir` and `--prefix`.
 
 ## 🔍 Example CLI Output
 
