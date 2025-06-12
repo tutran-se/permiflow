@@ -120,12 +120,8 @@ A `metadata.json` file containing:
 
 Use the built-in CLI command to view your scan history:
 
-```bash
-permiflow history
 ```
-
-```
-> go run . history
+> permiflow history
 Scan History
 --------------------------------------------
 Scan ID:    2025-06-12T08-58-17Z--94c7f21f
@@ -159,7 +155,7 @@ Timestamp:  2025-06-12T19:39:37Z
 ## 🔍 Example CLI Output
 
 ```
-> go run . scan --out-dir audit
+> permiflow scan --out-dir audit
 Permiflow: Scanning RBAC...
 Found 51 ClusterRoleBindings
 Scanning RoleBindings in 5 namespaces
@@ -176,12 +172,12 @@ JSON written to: audit/2025-06-12T20-03-59Z--63d5db96/report.json
 Scan history updated: .permiflow/history.json
 Report complete. 240 bindings scanned.
 Summary:
-   - Found 2 cluster-admin binding(s)
-   - Found 3 wildcard verb usage(s)
-   - Found 8 subject(s) with secrets access
-   - Found 0 privilege escalation(s)
-   - Found 16 exec access(es)
-   - Found 16 config read secrets access(es)
+- Found 2 cluster-admin binding(s)
+- Found 3 wildcard verb usage(s)
+- Found 8 subject(s) with secrets access
+- Found 0 privilege escalation(s)
+- Found 16 exec access(es)
+- Found 16 config read secrets access(es)
 ```
 
 ## 🏁 Supported CLI Flags
