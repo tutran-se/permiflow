@@ -191,6 +191,136 @@ Summary:
 
 ---
 
+## 🌐 MCP Server
+
+Permiflow includes an MCP (Model Context Protocol) server that exposes RBAC scanning capabilities through a standard interface, making it easy to integrate with other tools and services.
+
+### Features
+
+- **Multiple Transport Protocols**: Supports both HTTP and STDIO transports
+- **Standardized Interface**: Implements the Model Context Protocol specification
+- **RBAC Scanning**: Exposes the same powerful RBAC scanning capabilities as the CLI
+- **Graceful Shutdown**: Cleanly handles shutdown signals and resource cleanup
+
+### Getting Started
+
+1. **Build the MCP server**:
+
+```bash
+go build -o bin/mcp-server ./cmd/mcp-server
+```
+
+2. **Run the MCP server with HTTP transport**:
+
+```bash
+./bin/mcp-server --transport http --http-port 8080
+```
+
+3. **Run the MCP server with STDIO transport**:
+
+```bash
+./bin/mcp-server --transport stdio
+```
+
+### Configuration
+
+The MCP server can be configured using command-line flags or environment variables:
+
+| Flag | Type | Description | Environment Variable | Default |
+|------|------|-------------|----------------------|---------|
+| `--transport` | string | Transport type (http or stdio) | `MCP_TRANSPORT` | `stdio` |
+| `--http-port` | int | HTTP port (only used with http transport) | `MCP_HTTP_PORT` | `8080` |
+| `--debug` | bool | Enable debug logging | `MCP_DEBUG` | `false` |
+| `--kubeconfig` | string | Path to kubeconfig file | `KUBECONFIG` | `~/.kube/config` |
+| `--context` | string | Kubernetes context to use | `KUBE_CONTEXT` | Current context |
+
+### API Documentation
+
+The MCP server exposes the following tools:
+
+#### scan_rbac
+
+Scans Kubernetes RBAC rules and generates a report.
+
+**Input Schema:**
+
+```json
+{
+  "output_format": "json" | "markdown" | "csv",
+  "namespaces": ["string"]
+}
+```
+
+**Example Request:**
+
+```json
+{
+  "output_format": "json",
+  "namespaces": ["default", "kube-system"]
+}
+```
+
+**Example Response:**
+
+```json
+{
+  "report": "...",
+  "findings": [
+    {
+      "namespace": "default",
+      "resource": "pods",
+      "name": "pod-reader",
+      "rules": [
+        {
+          "verbs": ["get", "list", "watch"],
+          "resources": ["pods"],
+          "api_groups": [""]
+        }
+      ],
+      "risk_level": "LOW"
+    }
+  ]
+}
+```
+
+### Integration Example
+
+Here's an example of how to use the MCP server from a Go application:
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	mcp "github.com/mark3labs/mcp-go/mcp"
+)
+
+func main() {
+	// Create a new MCP client
+	client, err := mcp.NewClient("http://localhost:8080")
+	if err != nil {
+		log.Fatalf("Failed to create client: %v", err)
+	}
+
+	// Call the scan_rbac tool
+	result, err := client.CallTool(context.Background(), "scan_rbac", map[string]interface{}{
+		"output_format": "json",
+		"namespaces":    []string{"default"},
+	})
+	if err != nil {
+		log.Fatalf("Failed to call scan_rbac: %v", err)
+	}
+
+	// Process the result
+	fmt.Printf("Scan result: %+v\n", result)
+}
+```
+
+---
+
 ## 📣 License & Acknowledgements
 
 Permiflow is released under the MIT License.
