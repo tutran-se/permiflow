@@ -10,12 +10,15 @@ builds:
       - "-s -w -X github.com/tutran-se/permiflow/cmd.Version={{.Version}}"
 
 archives:
-  - format: tar.gz
+  - id: permiflow-archive
+    builds:
+      - permiflow
+    format: tar.gz
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     files:
       - LICENSE
       - README.md
-      - permiflow
+      - "{{ .Binary }}"
 
 checksum:
   name_template: "checksums.txt"
