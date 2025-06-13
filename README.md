@@ -22,6 +22,7 @@ Kubernetes RBAC is powerful — but opaque. Most tools either mutate live cluste
 
 - A clean, readable Markdown report (ideal for auditors, reviewers, and GRC)
 - A machine-parsable CSV/JSON export for analysis or GitOps flows
+- **Drift detection between scans** for audits or CI/CD pipelines
 - Peace of mind that your cluster was never touched or mutated
 
 No CRDs. No agents. No surprises.
@@ -46,8 +47,8 @@ Permiflow is made for:
 - Expands roles into rules (verbs + resources)
 - Classifies risks: `HIGH`, `MEDIUM`, `LOW`
 - Exports reports in **Markdown** (with ToC), **CSV**, and **JSON** formats
-- Generates a **human-readable summary** of key findings
 - Provides a **scan history** for traceability and future comparisons
+- Performs **RBAC drift detection** between any two scans
 - Flags dangerous permissions like:
   - `cluster-admin`
   - Wildcard verbs (`*`)
@@ -67,36 +68,45 @@ Permiflow is made for:
 
 ## 🚀 Quick Start
 
+### Install Permiflow
+
 ```bash
 go install github.com/tutran-se/permiflow@latest
+```
 
-# Short version
+### Scan Your Cluster
+
+```bash
+# Basic scan
 permiflow scan
 
 # Dry run: no files written, no scan history recorded.
 permiflow scan --dry-run
 
-# Full version
+# Full scan
 permiflow scan \
   --kubeconfig ~/.kube/config \
   --out-dir ./audit \
-  --prefix report \
+  --prefix report
 ```
 
-Requires Go 1.21+
+### Compare scans (drift detection)
 
-After running, you'll see a **timestamped output folder** like:
-
-```
-./audit/2025-06-13T08-17-01Z--d3d57c28/
-├── report.md
-├── report.csv
-├── report.json
-├── metadata.json
+```bash
+permiflow diff \
+  --before ./audit/scan1/report.json \
+  --after ./audit/scan2/report.json \
+  --out-dir ./diffs
 ```
 
-- Each scan gets a unique **Scan ID** like `2025-06-13T08-17-01Z--d3d57c28`
-- A `metadata.json` file stores scan time, summary, and output context
+### Fail in CI if high-risk access is introduced
+
+```bash
+permiflow diff \
+  --before ./baseline/report.json \
+  --after ./latest/report.json \
+  --fail-on high
+```
 
 ---
 
@@ -138,16 +148,6 @@ Scan ID:    2025-06-12T09-20-45Z--8fb8fdf8
 Path:       examples/2025-06-12T09-20-45Z--8fb8fdf8
 Context:    (default)
 Timestamp:  2025-06-12T09:20:45Z
-
-Scan ID:    2025-06-12T09-21-21Z--7518e75f
-Path:       examples/2025-06-12T09-21-21Z--7518e75f
-Context:    (default)
-Timestamp:  2025-06-12T09:21:21Z
-
-Scan ID:    2025-06-12T19-39-37Z--d3d57c28
-Path:       audit/2025-06-12T19-39-37Z--d3d57c28
-Context:    (default)
-Timestamp:  2025-06-12T19:39:37Z
 ```
 
 ---
@@ -180,7 +180,24 @@ Summary:
 - Found 16 config read secrets access(es)
 ```
 
+```
+> permiflow diff --before audit/report-before.json --after audit/report-after.json
+RBAC Diff Summary
+------------------
++ user-alice gained get access to configmaps in prod (via Role: config-reader) [MEDIUM]
+- user-temp lost exec access to pods/exec in prod (via Role: debug-access) [HIGH]
+
+Added: 1, Removed: 1, Changed: 0
+
+Diff written to audit/
+Files: diff.md, diff.json
+```
+
+---
+
 ## 🏁 Supported CLI Flags
+
+### `scan` command
 
 | Flag           | Type     | Description                                                                                     |
 | -------------- | -------- | ----------------------------------------------------------------------------------------------- |
@@ -188,6 +205,15 @@ Summary:
 | `--dry-run`    | `bool`   | Run scan without writing output files                                                           |
 | `--out-dir`    | `string` | Output directory for reports                                                                    |
 | `--prefix`     | `string` | Base name for output files (without extension). Example: 'audit' → audit.md (default: 'report') |
+
+### `diff` command
+
+| Flag        | Type     | Description                                                                     |
+| ----------- | -------- | ------------------------------------------------------------------------------- |
+| `--before`  | `string` | Path to baseline JSON report                                                    |
+| `--after`   | `string` | Path to newer/current JSON report                                               |
+| `--out-dir` | `string` | Output directory for diff exports (diff.md, diff.json)                          |
+| `--fail-on` | `string` | Fail the command if `HIGH`, `MEDIUM`, or `LOW` risk is newly introduced in diff |
 
 ---
 
@@ -227,13 +253,13 @@ go build -o permiflow .
 
 The MCP server can be configured using command-line flags or environment variables:
 
-| Flag | Type | Description | Environment Variable | Default |
-|------|------|-------------|----------------------|---------|
-| `--transport` | string | Transport type (http or stdio) | `MCP_TRANSPORT` | `stdio` |
-| `--http-port` | int | HTTP port (only used with http transport) | - | `8080` |
-| `--debug` | bool | Enable debug logging | `MCP_DEBUG` | `false` |
-| `--kubeconfig` | string | Path to kubeconfig file | `KUBECONFIG` | `~/.kube/config` |
-| `--context` | string | Kubernetes context to use | `MCP_KUBE_CONTEXT` | Current context |
+| Flag           | Type   | Description                               | Environment Variable | Default          |
+| -------------- | ------ | ----------------------------------------- | -------------------- | ---------------- |
+| `--transport`  | string | Transport type (http or stdio)            | `MCP_TRANSPORT`      | `stdio`          |
+| `--http-port`  | int    | HTTP port (only used with http transport) | -                    | `8080`           |
+| `--debug`      | bool   | Enable debug logging                      | `MCP_DEBUG`          | `false`          |
+| `--kubeconfig` | string | Path to kubeconfig file                   | `KUBECONFIG`         | `~/.kube/config` |
+| `--context`    | string | Kubernetes context to use                 | `MCP_KUBE_CONTEXT`   | Current context  |
 
 ### Cursor IDE Integration
 
@@ -255,11 +281,13 @@ Permiflow MCP server works seamlessly with Cursor IDE. Add one of these configur
 #### HTTP Transport
 
 First, start the server:
+
 ```bash
 ./permiflow mcp --transport http --http-port 8080
 ```
 
 Then configure Cursor:
+
 ```json
 {
   "mcpServers": {
@@ -285,6 +313,7 @@ Scans Kubernetes RBAC configurations and identifies potential security risks.
 **Example Usage in Cursor:**
 
 Once configured, you can ask Cursor:
+
 - "Scan my Kubernetes RBAC for security issues"
 - "Check for privilege escalation risks in my cluster"
 - "Show me a summary of RBAC security findings"
@@ -320,11 +349,13 @@ Once configured, you can ask Cursor:
 ### Testing the MCP Server
 
 #### STDIO Transport
+
 ```bash
 echo '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":1}' | ./permiflow mcp --transport stdio
 ```
 
 #### HTTP Transport
+
 ```bash
 # Start server
 ./permiflow mcp --transport http --http-port 8080 --debug
