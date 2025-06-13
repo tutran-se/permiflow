@@ -15,6 +15,7 @@ archives:
     files:
       - LICENSE
       - README.md
+      - permiflow
 
 checksum:
   name_template: "checksums.txt"
@@ -37,7 +38,7 @@ brews:
     homepage: https://github.com/tutran-se/permiflow
     description: Permiflow is a Kubernetes RBAC scanning tool
     test: |
-      system "#{bin}/permiflow --version"
+      system "#{bin}/permiflow version"
     install: |
       bin.install "permiflow"
 
