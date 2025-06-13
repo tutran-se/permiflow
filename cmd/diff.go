@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -81,8 +82,12 @@ func init() {
 	diffCmd.Flags().StringVar(&outDir, "out-dir", "", "Directory to write diff output (optional)")
 	diffCmd.Flags().StringVar(&failOnLevel, "fail-on", "", "Exit with code 1 if any new or changed binding matches this risk level (e.g. 'high')")
 
-	diffCmd.MarkFlagRequired("before")
-	diffCmd.MarkFlagRequired("after")
+	if err := diffCmd.MarkFlagRequired("before"); err != nil {
+		log.Printf("warn: failed to mark --before as required: %v", err)
+	}
+	if err := diffCmd.MarkFlagRequired("after"); err != nil {
+		log.Printf("warn: failed to mark --after as required: %v", err)
+	}
 
 	rootCmd.AddCommand(diffCmd)
 }
