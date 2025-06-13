@@ -191,6 +191,167 @@ Summary:
 
 ---
 
+## 🌐 MCP Server
+
+Permiflow includes an MCP (Model Context Protocol) server that exposes RBAC scanning capabilities through a standard interface, making it easy to integrate with AI tools like Cursor and other MCP-compatible clients.
+
+### Features
+
+- **Multiple Transport Protocols**: Supports both HTTP and STDIO transports
+- **Standardized Interface**: Implements the Model Context Protocol specification
+- **RBAC Scanning**: Exposes the same powerful RBAC scanning capabilities as the CLI
+- **Automatic Kubeconfig Detection**: Uses default kubeconfig path or environment variables
+- **Graceful Shutdown**: Cleanly handles shutdown signals and resource cleanup
+
+### Getting Started
+
+1. **Build the binary**:
+
+```bash
+go build -o permiflow .
+```
+
+2. **Run the MCP server with HTTP transport**:
+
+```bash
+./permiflow mcp --transport http --http-port 8080
+```
+
+3. **Run the MCP server with STDIO transport**:
+
+```bash
+./permiflow mcp --transport stdio
+```
+
+### Configuration
+
+The MCP server can be configured using command-line flags or environment variables:
+
+| Flag | Type | Description | Environment Variable | Default |
+|------|------|-------------|----------------------|---------|
+| `--transport` | string | Transport type (http or stdio) | `MCP_TRANSPORT` | `stdio` |
+| `--http-port` | int | HTTP port (only used with http transport) | - | `8080` |
+| `--debug` | bool | Enable debug logging | `MCP_DEBUG` | `false` |
+| `--kubeconfig` | string | Path to kubeconfig file | `KUBECONFIG` | `~/.kube/config` |
+| `--context` | string | Kubernetes context to use | `MCP_KUBE_CONTEXT` | Current context |
+
+### Cursor IDE Integration
+
+Permiflow MCP server works seamlessly with Cursor IDE. Add one of these configurations to your Cursor MCP settings:
+
+#### STDIO Transport (Recommended)
+
+```json
+{
+  "mcpServers": {
+    "permiflow": {
+      "command": "/path/to/your/permiflow",
+      "args": ["mcp", "--transport", "stdio"]
+    }
+  }
+}
+```
+
+#### HTTP Transport
+
+First, start the server:
+```bash
+./permiflow mcp --transport http --http-port 8080
+```
+
+Then configure Cursor:
+```json
+{
+  "mcpServers": {
+    "permiflow": {
+      "url": "http://localhost:8080/mcp"
+    }
+  }
+}
+```
+
+### Available Tools
+
+#### scan_rbac
+
+Scans Kubernetes RBAC configurations and identifies potential security risks.
+
+**Parameters:**
+
+- `kubeconfig` (optional): Path to kubeconfig file (defaults to `~/.kube/config`)
+- `context` (optional): Kubernetes context to use
+- `format` (optional): Output format - `json` for detailed findings, `summary` for overview only
+
+**Example Usage in Cursor:**
+
+Once configured, you can ask Cursor:
+- "Scan my Kubernetes RBAC for security issues"
+- "Check for privilege escalation risks in my cluster"
+- "Show me a summary of RBAC security findings"
+
+**Example JSON Response:**
+
+```json
+{
+  "findings": [
+    {
+      "subject": "system:admin",
+      "subjectKind": "User",
+      "role": "cluster-admin",
+      "namespace": "",
+      "verbs": ["*"],
+      "resources": ["*"],
+      "scope": "Cluster",
+      "riskLevel": "HIGH",
+      "reason": "Wildcard verb or resource detected"
+    }
+  ],
+  "summary": {
+    "clusterAdminBindings": 2,
+    "wildcardVerbs": 3,
+    "secretsAccess": 8,
+    "privilegeEscalation": 0,
+    "execAccess": 16,
+    "configReadSecrets": 16
+  }
+}
+```
+
+### Testing the MCP Server
+
+#### STDIO Transport
+```bash
+echo '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":1}' | ./permiflow mcp --transport stdio
+```
+
+#### HTTP Transport
+```bash
+# Start server
+./permiflow mcp --transport http --http-port 8080 --debug
+
+# Test in another terminal
+curl -X POST http://localhost:8080/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":1}'
+```
+
+### Integration Example
+
+Here's an example of how to call the scan_rbac tool via JSON-RPC:
+
+```bash
+# Get available tools
+echo '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":1}' | ./permiflow mcp --transport stdio
+
+# Scan RBAC with summary format
+echo '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"scan_rbac","arguments":{"format":"summary"}},"id":2}' | ./permiflow mcp --transport stdio
+
+# Scan RBAC with JSON format
+echo '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"scan_rbac","arguments":{"format":"json"}},"id":3}' | ./permiflow mcp --transport stdio
+```
+
+---
+
 ## 📣 License & Acknowledgements
 
 Permiflow is released under the MIT License.
