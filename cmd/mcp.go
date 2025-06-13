@@ -1,15 +1,12 @@
 package cmd
 
 import (
-	"context"
 	"log"
 	"os"
-	"os/signal"
-	"syscall"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
-	"github.com/tutran-se/permiflow/internal/mcp/config"
-	"github.com/tutran-se/permiflow/internal/mcp/server"
+	"github.com/tutran-se/permiflow/internal/mcp"
 )
 
 var (
@@ -22,7 +19,7 @@ var (
 
 var mcpCmd = &cobra.Command{
 	Use:   "mcp",
-	Short: "Start the MCP (Model Context Protocol) server",
+	Short: "Start the MCP server",
 	Long: `Start the MCP server that exposes Permiflow's RBAC scanning capabilities 
 through the Model Context Protocol. Supports both HTTP and STDIO transports.`,
 	Example: `
@@ -39,86 +36,51 @@ through the Model Context Protocol. Supports both HTTP and STDIO transports.`,
 	permiflow mcp --kubeconfig ~/.kube/config --context my-cluster
 	`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return runMCPServer(cmd)
-	},
-}
+		// Create configuration
+		cfg := mcp.DefaultConfig()
 
-func runMCPServer(cmd *cobra.Command) error {
-	// Initialize config with default values
-	cfg := config.DefaultConfig()
-
-	// Load config from environment variables (overrides default values)
-	cfg.LoadFromEnv()
-
-	// Override with command line flags if provided
-	if cmd.Flags().Changed("transport") {
+		// Set values from flags
 		cfg.Transport = mcpTransport
-	}
-	if cmd.Flags().Changed("http-port") {
 		cfg.HTTPPort = mcpHTTPPort
-	}
-	if cmd.Flags().Changed("debug") {
 		cfg.Debug = mcpDebug
-	}
-	if cmd.Flags().Changed("kubeconfig") {
 		cfg.Kubeconfig = mcpKubeconfig
-	}
-	if cmd.Flags().Changed("context") {
 		cfg.Context = mcpContext
-	}
 
-	// Create server
-	srv, err := server.NewServer(cfg)
-	if err != nil {
-		log.Fatalf("Failed to create MCP server: %v", err)
-	}
+		// Load from environment variables (can override flags)
+		cfg.LoadFromEnv()
 
-	// Setup signal handling
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	// Channel to handle server errors
-	errChan := make(chan error, 1)
-
-	// Start the server
-	go func() {
-		log.Printf("Starting MCP server with %s transport...", cfg.Transport)
-		if err := srv.Start(); err != nil {
-			errChan <- err
+		if cfg.Debug {
+			log.SetFlags(log.LstdFlags | log.Lshortfile)
+			log.Printf("Starting MCP server in debug mode")
+			log.Printf("Config: %+v", cfg)
 		}
-	}()
 
-	// Wait for interrupt signal or server error
-	sigCh := make(chan os.Signal, 1)
-	signal.Notify(sigCh, os.Interrupt, syscall.SIGTERM)
+		// Create and start the MCP server
+		server, err := mcp.NewServer(cfg)
+		if err != nil {
+			return err
+		}
 
-	select {
-	case err := <-errChan:
-		log.Printf("MCP server error: %v", err)
-		return err
-	case sig := <-sigCh:
-		log.Printf("Received signal %v, shutting down MCP server...", sig)
-	case <-ctx.Done():
-		log.Println("Context cancelled, shutting down MCP server...")
-	}
-
-	// Perform graceful shutdown
-	log.Println("Initiating graceful shutdown...")
-	if err := srv.Stop(); err != nil {
-		log.Printf("Error during MCP server shutdown: %v", err)
-		return err
-	}
-
-	log.Println("MCP server stopped gracefully")
-	return nil
+		// Start the server (this will block)
+		return server.Start()
+	},
 }
 
 func init() {
 	rootCmd.AddCommand(mcpCmd)
 
+	// Transport configuration
 	mcpCmd.Flags().StringVarP(&mcpTransport, "transport", "t", "stdio", "Transport type (stdio or http)")
 	mcpCmd.Flags().IntVarP(&mcpHTTPPort, "http-port", "p", 8080, "HTTP port (only used with http transport)")
+
+	// Debug configuration
 	mcpCmd.Flags().BoolVar(&mcpDebug, "debug", false, "Enable debug logging")
-	mcpCmd.Flags().StringVar(&mcpKubeconfig, "kubeconfig", "", "Path to kubeconfig file (default: $HOME/.kube/config or KUBECONFIG env var)")
+
+	// Kubernetes configuration
+	defaultKubeconfig := filepath.Join(os.Getenv("HOME"), ".kube", "config")
+	if kubeconfigEnv := os.Getenv("KUBECONFIG"); kubeconfigEnv != "" {
+		defaultKubeconfig = kubeconfigEnv
+	}
+	mcpCmd.Flags().StringVar(&mcpKubeconfig, "kubeconfig", defaultKubeconfig, "Path to kubeconfig file (default: $HOME/.kube/config or KUBECONFIG env var)")
 	mcpCmd.Flags().StringVar(&mcpContext, "context", "", "Kubernetes context to use")
 }
