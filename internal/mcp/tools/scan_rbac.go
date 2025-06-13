@@ -6,27 +6,45 @@ import (
 	"fmt"
 
 	mcp "github.com/mark3labs/mcp-go/mcp"
+	"github.com/tutran-se/permiflow/internal/permiflow"
 )
 
 // ScanRBACRequest defines the request format for the scan_rbac tool
 type ScanRBACRequest struct {
-	Namespaces  []string `json:"namespaces,omitempty"`
+	Namespaces   []string `json:"namespaces,omitempty"`
 	OutputFormat string   `json:"output_format,omitempty"`
+	Kubeconfig   string   `json:"kubeconfig,omitempty"`
 }
 
 // ScanRBACResponse defines the response format for the scan_rbac tool
 type ScanRBACResponse struct {
-	Report  string        `json:"report,omitempty"`
+	Report   string        `json:"report,omitempty"`
 	Findings []RBACFinding `json:"findings,omitempty"`
+	Summary  ScanSummary   `json:"summary,omitempty"`
 }
 
 // RBACFinding represents a single RBAC finding
 type RBACFinding struct {
-	Namespace string   `json:"namespace,omitempty"`
-	Resource  string   `json:"resource,omitempty"`
-	Name      string   `json:"name,omitempty"`
-	Rules     []Rule   `json:"rules,omitempty"`
-	RiskLevel string   `json:"risk_level,omitempty"`
+	Subject     string   `json:"subject,omitempty"`
+	SubjectKind string   `json:"subject_kind,omitempty"`
+	Role        string   `json:"role,omitempty"`
+	Namespace   string   `json:"namespace,omitempty"`
+	Verbs       []string `json:"verbs,omitempty"`
+	Resources   []string `json:"resources,omitempty"`
+	Scope       string   `json:"scope,omitempty"`
+	RiskLevel   string   `json:"risk_level,omitempty"`
+	Reason      string   `json:"reason,omitempty"`
+}
+
+// ScanSummary represents the summary statistics from the scan
+type ScanSummary struct {
+	TotalBindings        int `json:"total_bindings"`
+	ClusterAdminBindings int `json:"cluster_admin_bindings"`
+	WildcardVerbs        int `json:"wildcard_verbs"`
+	SecretsAccess        int `json:"secrets_access"`
+	PrivilegeEscalation  int `json:"privilege_escalation"`
+	ExecAccess           int `json:"exec_access"`
+	ConfigReadSecrets    int `json:"config_read_secrets"`
 }
 
 // Rule represents an RBAC rule
@@ -43,25 +61,43 @@ func scanRBAC(ctx context.Context, input json.RawMessage) (*ScanRBACResponse, er
 		return nil, fmt.Errorf("invalid request: %w", err)
 	}
 
-	// TODO: Replace with actual RBAC scanning logic from Permiflow
-	// For now, return a mock response
+	// Use the actual permiflow scanning logic
+	client := permiflow.GetKubeClient(req.Kubeconfig)
+
+	// Perform the actual RBAC scan
+	bindings, summary := permiflow.ScanRBAC(client)
+
+	// Convert permiflow.AccessBinding to RBACFinding
+	findings := make([]RBACFinding, len(bindings))
+	for i, binding := range bindings {
+		findings[i] = RBACFinding{
+			Subject:     binding.Subject,
+			SubjectKind: binding.SubjectKind,
+			Role:        binding.Role,
+			Namespace:   binding.Namespace,
+			Verbs:       binding.Verbs,
+			Resources:   binding.Resources,
+			Scope:       binding.Scope,
+			RiskLevel:   binding.RiskLevel,
+			Reason:      binding.Reason,
+		}
+	}
+
+	// Convert permiflow.Summary to ScanSummary
+	scanSummary := ScanSummary{
+		TotalBindings:        len(bindings),
+		ClusterAdminBindings: summary.ClusterAdminBindings,
+		WildcardVerbs:        summary.WildcardVerbs,
+		SecretsAccess:        summary.SecretsAccess,
+		PrivilegeEscalation:  summary.PrivilegeEscalation,
+		ExecAccess:           summary.ExecAccess,
+		ConfigReadSecrets:    summary.ConfigReadSecrets,
+	}
+
 	return &ScanRBACResponse{
-		Report: fmt.Sprintf("rbac-report.%s", req.OutputFormat),
-		Findings: []RBACFinding{
-			{
-				Namespace: "kube-system",
-				Resource:  "clusterrole",
-				Name:      "admin",
-				Rules: []Rule{
-					{
-						Verbs:     []string{"*"},
-						Resources: []string{"*"},
-						APIGroups: []string{"*"},
-					},
-				},
-				RiskLevel: "high",
-			},
-		},
+		Report:   fmt.Sprintf("rbac-report.%s", req.OutputFormat),
+		Findings: findings,
+		Summary:  scanSummary,
 	}, nil
 }
 
@@ -76,6 +112,9 @@ var ScanRBACTool = mcp.NewTool("scan_rbac",
 	mcp.WithArray("namespaces",
 		mcp.Description("List of namespaces to scan (empty for all)"),
 		mcp.Items("string"),
+	),
+	mcp.WithString("kubeconfig",
+		mcp.Description("Path to kubeconfig file (optional, defaults to $HOME/.kube/config)"),
 	),
 )
 
@@ -107,5 +146,3 @@ func Handler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult,
 		},
 	}, nil
 }
-
-
