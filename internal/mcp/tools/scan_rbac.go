@@ -1,148 +1,132 @@
 package tools
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"strings"
 
-	mcp "github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/tutran-se/permiflow/internal/permiflow"
 )
 
-// ScanRBACRequest defines the request format for the scan_rbac tool
-type ScanRBACRequest struct {
-	Namespaces   []string `json:"namespaces,omitempty"`
-	OutputFormat string   `json:"output_format,omitempty"`
-	Kubeconfig   string   `json:"kubeconfig,omitempty"`
+// ScanRBACResult represents the complete scan result
+type ScanRBACResult struct {
+	Findings []permiflow.AccessBinding `json:"findings"`
+	Summary  permiflow.Summary         `json:"summary"`
 }
 
-// ScanRBACResponse defines the response format for the scan_rbac tool
-type ScanRBACResponse struct {
-	Report   string        `json:"report,omitempty"`
-	Findings []RBACFinding `json:"findings,omitempty"`
-	Summary  ScanSummary   `json:"summary,omitempty"`
+// ScanRBACTool creates and returns the scan_rbac tool
+func ScanRBACTool() mcp.Tool {
+	return mcp.NewTool("scan_rbac",
+		mcp.WithDescription("Scan Kubernetes RBAC configurations and identify potential security risks"),
+		mcp.WithString("kubeconfig",
+			mcp.Description("Path to kubeconfig file (optional, defaults to ~/.kube/config)"),
+		),
+		mcp.WithString("context",
+			mcp.Description("Kubernetes context to use (optional)"),
+		),
+		mcp.WithArray("namespaces",
+			mcp.Description("Specific namespaces to scan (optional, scans all if not specified)"),
+		),
+		mcp.WithString("format",
+			mcp.Description("Output format: 'json' for detailed findings, 'summary' for overview only"),
+			mcp.DefaultString("json"),
+			mcp.Enum("json", "summary"),
+		),
+	)
 }
 
-// RBACFinding represents a single RBAC finding
-type RBACFinding struct {
-	Subject     string   `json:"subject,omitempty"`
-	SubjectKind string   `json:"subject_kind,omitempty"`
-	Role        string   `json:"role,omitempty"`
-	Namespace   string   `json:"namespace,omitempty"`
-	Verbs       []string `json:"verbs,omitempty"`
-	Resources   []string `json:"resources,omitempty"`
-	Scope       string   `json:"scope,omitempty"`
-	RiskLevel   string   `json:"risk_level,omitempty"`
-	Reason      string   `json:"reason,omitempty"`
-}
+// ProcessScanRBACRequest processes the scan_rbac tool request by calling the existing permiflow package
+func ProcessScanRBACRequest(request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	log.Printf("Processing scan_rbac request with arguments: %+v", request.GetArguments())
 
-// ScanSummary represents the summary statistics from the scan
-type ScanSummary struct {
-	TotalBindings        int `json:"total_bindings"`
-	ClusterAdminBindings int `json:"cluster_admin_bindings"`
-	WildcardVerbs        int `json:"wildcard_verbs"`
-	SecretsAccess        int `json:"secrets_access"`
-	PrivilegeEscalation  int `json:"privilege_escalation"`
-	ExecAccess           int `json:"exec_access"`
-	ConfigReadSecrets    int `json:"config_read_secrets"`
-}
+	// Extract parameters from request using the proper API
+	kubeconfigPath := request.GetString("kubeconfig", "")
+	contextName := request.GetString("context", "")
+	format := request.GetString("format", "json")
+	namespacesFilter := request.GetStringSlice("namespaces", []string{})
 
-// Rule represents an RBAC rule
-type Rule struct {
-	Verbs     []string `json:"verbs,omitempty"`
-	Resources []string `json:"resources,omitempty"`
-	APIGroups []string `json:"api_groups,omitempty"`
-}
+	log.Printf("Scan parameters - Kubeconfig: %s, Context: %s, Format: %s, Namespaces: %v",
+		kubeconfigPath, contextName, format, namespacesFilter)
 
-// scanRBAC handles the RBAC scanning logic
-func scanRBAC(ctx context.Context, input json.RawMessage) (*ScanRBACResponse, error) {
-	var req ScanRBACRequest
-	if err := json.Unmarshal(input, &req); err != nil {
-		return nil, fmt.Errorf("invalid request: %w", err)
+	// Use the existing permiflow package to get the Kubernetes client
+	var client = permiflow.GetKubeClient("")
+	if kubeconfigPath != "" {
+		client = permiflow.GetKubeClient(kubeconfigPath)
 	}
 
-	// Use the actual permiflow scanning logic
-	client := permiflow.GetKubeClient(req.Kubeconfig)
+	if client == nil {
+		return mcp.NewToolResultError("Failed to create Kubernetes client"), nil
+	}
 
-	// Perform the actual RBAC scan
+	log.Printf("Successfully created Kubernetes client")
+
+	// Call the existing permiflow.ScanRBAC function
 	bindings, summary := permiflow.ScanRBAC(client)
+	log.Printf("Scan completed - Found %d bindings", len(bindings))
 
-	// Convert permiflow.AccessBinding to RBACFinding
-	findings := make([]RBACFinding, len(bindings))
-	for i, binding := range bindings {
-		findings[i] = RBACFinding{
-			Subject:     binding.Subject,
-			SubjectKind: binding.SubjectKind,
-			Role:        binding.Role,
-			Namespace:   binding.Namespace,
-			Verbs:       binding.Verbs,
-			Resources:   binding.Resources,
-			Scope:       binding.Scope,
-			RiskLevel:   binding.RiskLevel,
-			Reason:      binding.Reason,
+	// Filter by namespaces if specified
+	if len(namespacesFilter) > 0 {
+		bindings = filterBindingsByNamespaces(bindings, namespacesFilter)
+		log.Printf("After namespace filtering: %d bindings", len(bindings))
+	}
+
+	result := ScanRBACResult{
+		Findings: bindings,
+		Summary:  summary,
+	}
+
+	// Format output based on requested format
+	if format == "summary" {
+		return mcp.NewToolResultText(formatSummaryText(summary)), nil
+	} else {
+		// JSON format (default)
+		jsonData, err := json.MarshalIndent(result, "", "  ")
+		if err != nil {
+			log.Printf("Error marshaling JSON: %v", err)
+			return mcp.NewToolResultError(fmt.Sprintf("Error formatting results: %v", err)), nil
+		}
+		return mcp.NewToolResultText(string(jsonData)), nil
+	}
+}
+
+// filterBindingsByNamespaces filters the bindings to only include those in the specified namespaces
+func filterBindingsByNamespaces(bindings []permiflow.AccessBinding, namespaces []string) []permiflow.AccessBinding {
+	if len(namespaces) == 0 {
+		return bindings
+	}
+
+	// Create a map for faster lookup
+	nsMap := make(map[string]bool)
+	for _, ns := range namespaces {
+		nsMap[ns] = true
+	}
+
+	var filtered []permiflow.AccessBinding
+	for _, binding := range bindings {
+		// Include cluster-scoped bindings or bindings in the specified namespaces
+		if binding.Scope == "cluster" || nsMap[binding.Namespace] {
+			filtered = append(filtered, binding)
 		}
 	}
 
-	// Convert permiflow.Summary to ScanSummary
-	scanSummary := ScanSummary{
-		TotalBindings:        len(bindings),
-		ClusterAdminBindings: summary.ClusterAdminBindings,
-		WildcardVerbs:        summary.WildcardVerbs,
-		SecretsAccess:        summary.SecretsAccess,
-		PrivilegeEscalation:  summary.PrivilegeEscalation,
-		ExecAccess:           summary.ExecAccess,
-		ConfigReadSecrets:    summary.ConfigReadSecrets,
-	}
-
-	return &ScanRBACResponse{
-		Report:   fmt.Sprintf("rbac-report.%s", req.OutputFormat),
-		Findings: findings,
-		Summary:  scanSummary,
-	}, nil
+	return filtered
 }
 
-// ScanRBACTool is the MCP tool for scanning Kubernetes RBAC rules
-var ScanRBACTool = mcp.NewTool("scan_rbac",
-	mcp.WithDescription("Scan Kubernetes RBAC rules and generate a report"),
-	mcp.WithString("output_format",
-		mcp.Description("Output format for the report"),
-		mcp.DefaultString("json"),
-		mcp.Enum("json", "markdown", "csv"),
-	),
-	mcp.WithArray("namespaces",
-		mcp.Description("List of namespaces to scan (empty for all)"),
-		mcp.Items("string"),
-	),
-	mcp.WithString("kubeconfig",
-		mcp.Description("Path to kubeconfig file (optional, defaults to $HOME/.kube/config)"),
-	),
-)
+// formatSummaryText formats the scan summary as a human-readable text
+func formatSummaryText(summary permiflow.Summary) string {
+	var sb strings.Builder
 
-// Handler handles the scan_rbac tool requests
-func Handler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	// Get the raw arguments as JSON
-	rawArgs := req.GetRawArguments()
-	argsJSON, err := json.Marshal(rawArgs)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal request arguments: %w", err)
-	}
+	sb.WriteString("RBAC Security Scan Summary\n")
+	sb.WriteString("==========================\n\n")
 
-	// Call the scanRBAC function with the raw input
-	resp, err := scanRBAC(ctx, argsJSON)
-	if err != nil {
-		return nil, fmt.Errorf("RBAC scan failed: %w", err)
-	}
+	sb.WriteString(fmt.Sprintf("Cluster Admin Bindings: %d\n", summary.ClusterAdminBindings))
+	sb.WriteString(fmt.Sprintf("Wildcard Verbs: %d\n", summary.WildcardVerbs))
+	sb.WriteString(fmt.Sprintf("Secrets Access: %d\n", summary.SecretsAccess))
+	sb.WriteString(fmt.Sprintf("Privilege Escalation: %d\n", summary.PrivilegeEscalation))
+	sb.WriteString(fmt.Sprintf("Exec Access: %d\n", summary.ExecAccess))
+	sb.WriteString(fmt.Sprintf("Config Read Secrets: %d\n", summary.ConfigReadSecrets))
 
-	// Convert response to JSON
-	resultJSON, err := json.Marshal(resp)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal response: %w", err)
-	}
-
-	// Return the result in the expected format
-	return &mcp.CallToolResult{
-		Content: []mcp.Content{
-			mcp.NewTextContent(string(resultJSON)),
-		},
-	}, nil
+	return sb.String()
 }

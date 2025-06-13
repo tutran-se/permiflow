@@ -5,21 +5,16 @@ import (
 	"strconv"
 )
 
-// Config holds the MCP server configuration
+// Config holds all configuration for the MCP server
 type Config struct {
-	// Transport configuration
-	Transport string `json:"transport"` // "stdio" or "http"
-	HTTPPort  int    `json:"http_port"`
-
-	// Logging
-	Debug bool `json:"debug"`
-
-	// Kubernetes configuration
-	Kubeconfig string `json:"kubeconfig"`
-	Context    string `json:"context"`
+	Transport  string
+	HTTPPort   int
+	Debug      bool
+	Kubeconfig string
+	Context    string
 }
 
-// DefaultConfig returns the default configuration
+// DefaultConfig returns a new config with default values
 func DefaultConfig() *Config {
 	return &Config{
 		Transport:  "stdio",
@@ -32,25 +27,28 @@ func DefaultConfig() *Config {
 
 // LoadFromEnv loads configuration from environment variables
 func (c *Config) LoadFromEnv() {
-	if v := os.Getenv("MCP_TRANSPORT"); v != "" {
-		c.Transport = v
+	if transport := os.Getenv("MCP_TRANSPORT"); transport != "" {
+		c.Transport = transport
 	}
-
-	if v := os.Getenv("MCP_HTTP_PORT"); v != "" {
-		if port, err := strconv.Atoi(v); err == nil {
-			c.HTTPPort = port
+	if port := os.Getenv("MCP_HTTP_PORT"); port != "" {
+		if p, err := strconv.Atoi(port); err == nil {
+			c.HTTPPort = p
 		}
 	}
-
-	if v := os.Getenv("MCP_DEBUG"); v != "" {
-		c.Debug = v == "true" || v == "1"
+	if debug := os.Getenv("MCP_DEBUG"); debug == "true" {
+		c.Debug = true
+	}
+	if kubeconfig := os.Getenv("KUBECONFIG"); kubeconfig != "" {
+		c.Kubeconfig = kubeconfig
+	}
+	if context := os.Getenv("KUBE_CONTEXT"); context != "" {
+		c.Context = context
 	}
 
-	if v := os.Getenv("KUBECONFIG"); v != "" {
-		c.Kubeconfig = v
-	}
-
-	if v := os.Getenv("KUBE_CONTEXT"); v != "" {
-		c.Context = v
+	// Default kubeconfig location if not set
+	if c.Kubeconfig == "" {
+		if home := os.Getenv("HOME"); home != "" {
+			c.Kubeconfig = home + "/.kube/config"
+		}
 	}
 }
