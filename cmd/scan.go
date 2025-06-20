@@ -14,7 +14,6 @@ import (
 
 var (
 	kubeconfig    string
-	dryRun        bool
 	outputDir     string
 	outputPrefix  string
 	logTimestamps bool

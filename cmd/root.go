@@ -7,6 +7,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	dryRun bool
+)
+
 // rootCmd is the base command called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "permiflow",
