@@ -92,10 +92,6 @@ func TestGenerateRBACRole_FileOutput(t *testing.T) {
 
 // Helper to test encoding logic
 func testencodeRBACRole(opts permiflow.GenerateRBACRoleOptions, buf *bytes.Buffer) error {
-	// swap stdout serializer with mock buffer
-	type encoder interface {
-		Encode(obj interface{}, w *bytes.Buffer) error
-	}
 	return permiflow.GenerateRBACRoleToStdoutWithWriter(opts, buf)
 }
 
