@@ -13,7 +13,6 @@ import (
 )
 
 var (
-	kubeconfig    string
 	outputDir     string
 	outputPrefix  string
 	logTimestamps bool
@@ -144,8 +143,6 @@ var scanCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(scanCmd)
 
-	scanCmd.Flags().StringVar(&kubeconfig, "kubeconfig", filepath.Join(os.Getenv("HOME"), ".kube", "config"), "Path to the kubeconfig file (default: $HOME/.kube/config)")
-	scanCmd.Flags().BoolVar(&dryRun, "dry-run", false, "No files written, no scan history recorded (default: false)")
 	scanCmd.Flags().StringVar(&outputDir, "out-dir", ".", "Directory to write reports into (default: current directory)")
 	scanCmd.Flags().StringVar(&outputPrefix, "prefix", "report", "Base name for output files (without extension). Example: 'audit' → audit.md (default: 'report')")
 	scanCmd.Flags().BoolVar(&logTimestamps, "log-timestamps", false, "Include timestamps in output (useful for debugging/logging)")

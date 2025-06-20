@@ -8,7 +8,8 @@ import (
 )
 
 var (
-	dryRun bool
+	dryRun     bool
+	kubeconfig string
 )
 
 // rootCmd is the base command called without any subcommands
@@ -24,4 +25,10 @@ func Execute() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
+}
+
+// add global flags to the root command
+func init() {
+	rootCmd.PersistentFlags().BoolVar(&dryRun, "dry-run", false, "Enable dry run mode (no changes made)")
+	rootCmd.PersistentFlags().StringVar(&kubeconfig, "kubeconfig", "", "Path to kubeconfig file (default uses KUBECONFIG env or ~/.kube/config)")
 }

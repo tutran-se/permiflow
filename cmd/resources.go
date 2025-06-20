@@ -42,7 +42,7 @@ var resourcesCmd = &cobra.Command{
 		}
 
 		// Enhanced UX output
-		fmt.Println("📦 Kubernetes API Resources by GroupVersion:")
+		fmt.Println("Kubernetes API Resources by GroupVersion:")
 		fmt.Println("------------------------------------------------")
 
 		groupVersions := make([]string, 0, len(groupMap))
@@ -69,7 +69,7 @@ var resourcesCmd = &cobra.Command{
 			}
 		}
 
-		fmt.Println("\n✅ Tip: Want to generate a secure ClusterRole?")
+		fmt.Println("\nTip: Want to generate a secure ClusterRole?")
 		fmt.Println("   permiflow generate-role --allow-verbs get,list --exclude-resources secrets,pods/exec")
 		fmt.Println()
 
